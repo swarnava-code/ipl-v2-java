@@ -8,16 +8,19 @@ import java.util.*;//hashmap
 public class Main {
 
 	static final String path1 = "csv/matches.csv", path2 = "csv/deliveries.csv";
-	static String next="", winner="";
-	static int count, key, val, year, id, count_extra_run2016=0, extra_run;
+	static String next="", winner="", bowler;
+	static int count, key, val, year, id, count_extra_run2016=0, extra_run, run;
+	static float over, economic_rate;
 
-	static HashMap<Integer, Integer> noOfMatch = new HashMap<Integer, Integer>();
-	static HashMap<String, Integer> winning = new HashMap<String, Integer>();
-	static HashMap<Integer, HashMap<String, Integer> > win = new HashMap<Integer, HashMap<String, Integer> >();
-	static HashMap<Integer, String> id2016 = new HashMap<Integer, String>();
-	static HashMap<String, Integer> countExtraRun = new HashMap<String, Integer>();
-	//static Set<Integer> id2016 = new LinkedHashSet<Integer>(); //to collect id from matches.csv, will be use in deliveries.csv
+	static HashMap<Integer, Integer> noOfMatch = new HashMap<Integer, Integer>();//for question 1
+	static HashMap<String, Integer> winning = new HashMap<String, Integer>();//for question 2
+	//static HashMap<Integer, HashMap<String, Integer> > win = new HashMap<Integer, HashMap<String, Integer> >();
+	static HashMap<Integer, String> id2016 = new HashMap<Integer, String>();//for question 3 : to collect id from matches.csv
+	static HashMap<String, Integer> countExtraRun = new HashMap<String, Integer>();//for question 3 
+	static List<Integer> id2015 = new LinkedList<Integer>();//for question 4 : to collect id from matches.csv
+	static HashMap<String, Float> economicBowler = new HashMap<String, Float>();//for question 4
 
+	
 
 	static boolean scanMatches() throws FileNotFoundException{
 		Scanner sc = new Scanner(new File(path1));
@@ -56,6 +59,12 @@ public class Main {
 				winning.put(winner, 1);
 			}
 
+			// 4. collect id for 2015 ((1st part algo))
+			if(year==2015){
+				id2015.add(id);
+			}
+
+
 			/*
 			if(win.containsKey(year)){
 				HashMap<String, Integer> inner = win.get(year);
@@ -77,7 +86,6 @@ public class Main {
 		return true;
 	}
 	static boolean scanDeliveries() throws FileNotFoundException{
-
 		Scanner sc = new Scanner(new File(path2));
 		sc.useDelimiter("\n");   //sets the delimiter pattern  
 		sc.next(); //to eliminate heading, otherwise NumberFormatException happen
@@ -87,6 +95,12 @@ public class Main {
 
 			id = Integer.parseInt(values[0]); //foreign key
 			extra_run = Integer.parseInt(values[16]);
+			bowler = values[8];
+			run = Integer.parseInt(values[17]);
+			over = Float.parseFloat(values[4]);
+
+
+
 
 			// 3. For the year 2016 get the extra runs conceded per team. (2nd part algo)
 			if(id2016.containsKey(id)){
@@ -98,6 +112,23 @@ public class Main {
 				}
 				count_extra_run2016 += extra_run;
 			}
+
+
+			
+			// 4.) For the year 2015 get the top economical bowlers.
+
+			if(id2015.contains(id)){
+				economic_rate = run / over;
+				if(economicBowler.containsKey(bowler)){
+					economicBowler.put(bowler, economicBowler.get(bowler)+economic_rate);
+				}else{
+					economicBowler.put(bowler, economic_rate);
+				}
+			}
+
+			
+			
+			
 
 		}   
 		sc.close();
@@ -138,11 +169,18 @@ public class Main {
 
 		winning.remove(""); //remove null/blank key element
 		System.out.println(
-			"\n2. Number of matches won of all teams over all the years of IPL. : \n"
+			"\n2.) Number of matches won of all teams over all the years of IPL. : \n"
 			+winning);
 
-		System.out.println("\n3. For the year 2016 get the extra runs conceded per team. : \n"+countExtraRun
+		System.out.println("\n3.) For the year 2016 get the extra runs conceded per team. : \n"+countExtraRun
 			+"\n Total extra run make by all team for the year 2016 : "+count_extra_run2016);
+
+		System.out.println("\n4.) For the year 2015 get the top economical bowlers. :\n"+economicBowler);
+
+
+
+
+
 
 		
 	}  
