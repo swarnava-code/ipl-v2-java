@@ -9,6 +9,9 @@ public class Main {
 	static HashMap<Integer, Integer> noOfMatch = new HashMap<Integer, Integer>();
 	static HashMap<String, Integer> winning = new HashMap<String, Integer>();
 	static HashMap<Integer, HashMap<String, Integer> > win = new HashMap<Integer, HashMap<String, Integer> >();
+	static HashMap<Integer, String> id2016 = new HashMap<Integer, String>();
+	static HashMap<String, Integer> countExtraRun = new HashMap<String, Integer>();
+	//static Set<Integer> id2016 = new LinkedHashSet<Integer>(); //to collect id from matches.csv, will be use in deliveries.csv
 
 
 
@@ -23,13 +26,11 @@ public class Main {
 
 
 	public static void main(String[] args)   {  
-		//final int col_path1 = 5; //18
-		final String path1 = "csv/matches.csv";//"demo.csv";//archive/matches.csv
+		final String path1 = "csv/matches.csv", path2 = "csv/deliveries.csv";
 		String next="", winner="";
-		int count, key, val, year;
+		int count, key, val, year, id, count_extra_run2016=0, extra_run;
 		
-		//Short:Year, Byte:count
-
+		
 		try{
 				Scanner sc = new Scanner(new File(path1));
 
@@ -49,9 +50,16 @@ public class Main {
 					String values[] = next.split(",");
 
 
-					//keys
-					year = Integer.parseInt(values[1]);
-					winner = values[10];
+					
+					id = Integer.parseInt(values[0]);
+					year = Integer.parseInt(values[1]);//keys
+					winner = values[10];//keys
+
+					// 3. collect id of 2016
+					if(year==2016){
+						id2016.put(id, winner);
+						//id2016.add(id);
+					}
 
 
 					// 2 
@@ -113,20 +121,96 @@ public class Main {
 		}catch(FileNotFoundException e){
 			System.out.println("File not found : "+path1+"\nDetails: "+e);
 		}
-		catch(NumberFormatException e){
-			System.out.println("number format exception : "+"\nDetails: "+e);
+		catch(Exception e){
+			System.out.println("unknown exception handled : \nDetails: "+e);
 		}
-		finally{
-			System.out.println(
-				"1.) Number of matches played per year for all the years in IPL: \n"
-				+noOfMatch);
 
-			winning.remove("");
-			System.out.println(
-				"\n2. Number of matches won of all teams over all the years of IPL. \n"
-				+winning);
 
+		// fetching 2nd csv file
+		try{
+				Scanner sc = new Scanner(new File(path2));
+				sc.useDelimiter("\n");   //sets the delimiter pattern  
+
+
+				
+
+				sc.next();//to eliminate heading, otherwise NumberFormatException happen
+				while (sc.hasNext()) {
+					next = sc.next();
+					String values[] = next.split(",");
+
+					id = Integer.parseInt(values[0]); //foreign key
+					extra_run = Integer.parseInt(values[16]);
+
+
+
+					if(id2016.containsKey(id)){
+						winner = id2016.get(id);
+						if(countExtraRun.containsKey(winner)){
+							countExtraRun.put(winner, countExtraRun.get(winner)+extra_run);
+						}else{
+							countExtraRun.put(winner, extra_run);
+						}
+						count_extra_run2016 += extra_run;
+					}
+
+
+					//3rd problem
+					/*
+					if(id2016.contains(id)){
+						countExtraRun.put
+						count_extra_run2016 += extra_run;
+					}
+					*/
+				
+
+
+
+				}   
+				sc.close();
+
+
+		}catch(FileNotFoundException e){
+			System.out.println("File2 not found : "+path2+"\nDetails: "+e);
 		}
+		catch(Exception e){
+			System.out.println("unknown exception handled while process file2 : \nDetails: "+e);
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+		System.out.println(
+			"1.) Number of matches played per year for all the years in IPL. : \n"
+			+noOfMatch);
+
+		winning.remove(""); //remove null/blank key element
+		System.out.println(
+			"\n2. Number of matches won of all teams over all the years of IPL. : \n"
+			+winning);
+
+
+		System.out.println("\n3. For the year 2016 get the extra runs conceded per team. : \n"+countExtraRun
+			+"\n Total extra run make by all team for the year 2016 : "+count_extra_run2016);
+
+		
 	}  
 }  
 
