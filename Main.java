@@ -7,9 +7,9 @@ import java.util.*;//hashmap
 
 public class Main {
 
-	static final String path1 = "csv/matches.csv", path2 = "csv/deliveries.csv";
-	static String next="", winner="", bowler;
-	static int count, key, val, year, id, count_extra_run2016=0, extra_run, run;
+	static final String path1 = "csv/matches.csv", path2 = "csv/deliveries.csv", path3 = "csv/demo.csv";
+	static String next="", winner="", bowler, name;
+	static int count, key, val, year, id, count_extra_run2016=0, extra_run, run, salary;
 	static float over, economic_rate;
 
 	static HashMap<Integer, Integer> noOfMatch = new HashMap<Integer, Integer>();//for question 1
@@ -19,6 +19,8 @@ public class Main {
 	static HashMap<String, Integer> countExtraRun = new HashMap<String, Integer>();//for question 3 
 	static List<Integer> id2015 = new LinkedList<Integer>();//for question 4 : to collect id from matches.csv
 	static HashMap<String, Float> economicBowler = new HashMap<String, Float>();//for question 4
+	static HashMap<String, Integer> myScenario = new HashMap<String, Integer>();
+
 
 	
 
@@ -64,23 +66,6 @@ public class Main {
 				id2015.add(id);
 			}
 
-
-			/*
-			if(win.containsKey(year)){
-				HashMap<String, Integer> inner = win.get(year);
-				if(inner.containsKey(winner)){
-					inner.put(winner, inner.get(winner)+1);
-				}else{
-					inner.put(winner, 1);
-				}
-				win.put(year, inner);
-			} else{
-				HashMap<String, Integer> inner = new HashMap<String, Integer>();
-				inner.put(winner, 1);
-				win.put(year, inner);
-			}
-			*/
-
 		}   
 		sc.close();
 		return true;
@@ -100,8 +85,6 @@ public class Main {
 			over = Float.parseFloat(values[4]);
 
 
-
-
 			// 3. For the year 2016 get the extra runs conceded per team. (2nd part algo)
 			if(id2016.containsKey(id)){
 				winner = id2016.get(id);
@@ -114,9 +97,7 @@ public class Main {
 			}
 
 
-			
 			// 4.) For the year 2015 get the top economical bowlers.
-
 			if(id2015.contains(id)){
 				economic_rate = run / over;
 				if(economicBowler.containsKey(bowler)){
@@ -126,13 +107,34 @@ public class Main {
 				}
 			}
 
-			
-			
-			
-
 		}   
 		sc.close();
 
+		return true;
+	}
+
+	static boolean scanDemo() throws FileNotFoundException{
+		Scanner sc = new Scanner(new File(path3));
+		sc.useDelimiter("\n");   //sets the delimiter pattern  
+		sc.next(); //to eliminate heading, otherwise NumberFormatException happen
+		while (sc.hasNext()) {
+			next = sc.next();
+			String values[] = next.split(",");
+
+			name = values[0];
+			salary = Integer.parseInt(values[3].trim()+""); 
+
+			// 5.) My scenario: list name whose salary more than 29k.
+			if(salary>29000){
+				if(myScenario.containsKey(name)){
+					myScenario.put(name, myScenario.get(name)+salary);
+				}else{
+					myScenario.put(name, salary);
+				}
+			}
+
+		}   
+		sc.close();
 		return true;
 	}
 	
@@ -141,25 +143,35 @@ public class Main {
 	public static void main(String[] args)   {  
 		
 		
-		// fetching 1st csv file and process required data : Matches
+		// fetching 1st csv file and process with required data : Matches
 		try{
 			scanMatches();
 		}catch(FileNotFoundException e){
 			System.out.println("File not found : "+path1+"\nDetails: "+e);
 		}
 		catch(Exception e){
-			System.out.println("unknown exception handled : \nDetails: "+e);
+			System.out.println("UNKNOWN exception handled while process file-1 : \nDetails: "+e+"\n\n");
 		}
 
 
-		// fetching 2nd csv file and process required data : Deliveries
+		// fetching 2nd csv file and process with required data : Deliveries
 		try{
 			scanDeliveries();
 		}catch(FileNotFoundException e){
 			System.out.println("File2 not found : "+path2+"\nDetails: "+e);
 		}
 		catch(Exception e){
-			System.out.println("unknown exception handled while process file2 : \nDetails: "+e);
+			System.out.println("UNKNOWN exception handled while process file-2 : \nDetails: "+e+"\n\n");
+		}
+
+		// fetching 3rd csv file and process with required data : (My scenario: demo.csv)
+		try{
+			scanDemo();
+		}catch(FileNotFoundException e){
+			System.out.println("File not found : "+path3+"\nDetails: "+e);
+		}
+		catch(Exception e){
+			System.out.println("UNKNOWN exception handled while process file-3 : \nDetails: "+e+"\n\n");
 		}
 
 		//Outputs
@@ -178,8 +190,7 @@ public class Main {
 		System.out.println("\n4.) For the year 2015 get the top economical bowlers. :\n"+economicBowler);
 
 
-
-
+		System.out.println("\n5.) My scenario: list name whose salary more than 29k. :\n"+myScenario);
 
 
 		
