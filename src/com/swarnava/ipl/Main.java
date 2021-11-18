@@ -1,6 +1,5 @@
 package com.swarnava.ipl;
 
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -9,28 +8,26 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-
-    static final String path1 = "csv/matches.csv", path2 = "csv/deliveries.csv", path3 = "csv/demo.csv";
+    private static final String PATH_MATCHES = "csv/matches.csv", PATH_DELIVERY = "csv/deliveries.csv", PATH_DEMO = "csv/demo.csv";
     static String next="", winner="", bowler, name;
-    static int count, key, val, year, id, count_extra_run2016=0, extra_run, run, salary;
-    static float over, economic_rate;
+    static int year, id, countExtraRun2016 =0, extraRun, run, salary;
+    static float over, economicRate;
 
-    static HashMap<Integer, Integer> noOfMatch = new HashMap<Integer, Integer>();//for question 1
-    static HashMap<String, Integer> winning = new HashMap<String, Integer>();//for question 2
-    //static HashMap<Integer, HashMap<String, Integer> > win = new HashMap<Integer, HashMap<String, Integer> >();
-    static HashMap<Integer, String> id2016 = new HashMap<Integer, String>();//for question 3 : to collect id from matches.csv
-    static HashMap<String, Integer> countExtraRun = new HashMap<String, Integer>();//for question 3
-    static List<Integer> id2015 = new LinkedList<Integer>();//for question 4 : to collect id from matches.csv
-    static HashMap<String, Float> economicBowler = new HashMap<String, Float>();//for question 4
-    static HashMap<String, Integer> myScenario = new HashMap<String, Integer>();
-    static HashMap<String, Integer> runHm = new HashMap<String, Integer>();
-    static HashMap<String, Float> overHm = new HashMap<String, Float>();
+    private static final HashMap<Integer, Integer> noOfMatch = new HashMap<Integer, Integer>();//for question 1
+    private static final HashMap<String, Integer> winning = new HashMap<String, Integer>();//for question 2
+    private static final HashMap<Integer, String> id2016 = new HashMap<Integer, String>();//for question 3 : to collect id from matches.csv
+    private static final HashMap<String, Integer> countExtraRun = new HashMap<String, Integer>();//for question 3
+    private static final List<Integer> id2015 = new LinkedList<Integer>();//for question 4 : to collect id from matches.csv
+    private static final HashMap<String, Float> economicBowler = new HashMap<String, Float>();//for question 4
+    private static final HashMap<String, Integer> myScenario = new HashMap<String, Integer>();//for question 5
+    private static final HashMap<String, Integer> runHm = new HashMap<String, Integer>();
+    private static final HashMap<String, Float> overHm = new HashMap<String, Float>();
 
 
 
 
     static boolean scanMatches() throws FileNotFoundException{
-        Scanner sc = new Scanner(new File(path1));
+        Scanner sc = new Scanner(new File(PATH_MATCHES));
 
         sc.useDelimiter("\n");   //sets the delimiter pattern
         //count = 1;
@@ -76,7 +73,7 @@ public class Main {
         return true;
     }
     static boolean scanDeliveries() throws FileNotFoundException{
-        Scanner sc = new Scanner(new File(path2));
+        Scanner sc = new Scanner(new File(PATH_DELIVERY));
         sc.useDelimiter("\n");   //sets the delimiter pattern
         sc.next(); //to eliminate heading, otherwise NumberFormatException happen
         while (sc.hasNext()) {
@@ -84,7 +81,7 @@ public class Main {
             String values[] = next.split(",");
 
             id = Integer.parseInt(values[0]); //foreign key
-            extra_run = Integer.parseInt(values[16]);
+            extraRun = Integer.parseInt(values[16]);
             bowler = values[8];
             run = Integer.parseInt(values[17]);
             over = Float.parseFloat(values[4]);
@@ -94,11 +91,11 @@ public class Main {
             if(id2016.containsKey(id)){
                 winner = id2016.get(id);
                 if(countExtraRun.containsKey(winner)){
-                    countExtraRun.put(winner, countExtraRun.get(winner)+extra_run);
+                    countExtraRun.put(winner, countExtraRun.get(winner)+ extraRun);
                 }else{
-                    countExtraRun.put(winner, extra_run);
+                    countExtraRun.put(winner, extraRun);
                 }
-                count_extra_run2016 += extra_run;
+                countExtraRun2016 += extraRun;
             }
 
 
@@ -132,12 +129,12 @@ public class Main {
             for(String key : runHm.keySet()) {
                 run = runHm.get(key);
                 over = overHm.get(key);
-                economic_rate = run / over;
+                economicRate = run / over;
 
                 if(economicBowler.containsKey(key)){
-                    economicBowler.put(key, economicBowler.get(key)+economic_rate);
+                    economicBowler.put(key, economicBowler.get(key)+ economicRate);
                 }else{
-                    economicBowler.put(key, economic_rate);
+                    economicBowler.put(key, economicRate);
                 }
             }
 
@@ -149,7 +146,7 @@ public class Main {
     }
 
     static boolean scanDemo() throws FileNotFoundException{
-        Scanner sc = new Scanner(new File(path3));
+        Scanner sc = new Scanner(new File(PATH_DEMO));
         sc.useDelimiter("\n");   //sets the delimiter pattern
         sc.next(); //to eliminate heading, otherwise NumberFormatException happen
         while (sc.hasNext()) {
@@ -182,7 +179,7 @@ public class Main {
         try{
             scanMatches();
         }catch(FileNotFoundException e){
-            System.out.println("File not found : "+path1+"\nDetails: "+e);
+            System.out.println("File not found : "+ PATH_MATCHES +"\nDetails: "+e);
         }
         catch(Exception e){
             System.out.println("UNKNOWN exception handled while process file-1 : \nDetails: "+e+"\n\n");
@@ -193,7 +190,7 @@ public class Main {
         try{
             scanDeliveries();
         }catch(FileNotFoundException e){
-            System.out.println("File2 not found : "+path2+"\nDetails: "+e);
+            System.out.println("File2 not found : "+ PATH_DELIVERY +"\nDetails: "+e);
         }
         catch(Exception e){
             System.out.println("UNKNOWN exception handled while process file-2 : \nDetails: "+e+"\n\n");
@@ -203,7 +200,7 @@ public class Main {
         try{
             scanDemo();
         }catch(FileNotFoundException e){
-            System.out.println("File not found : "+path3+"\nDetails: "+e);
+            System.out.println("File not found : "+ PATH_DEMO +"\nDetails: "+e);
         }
         catch(Exception e){
             System.out.println("UNKNOWN exception handled while process file-3 : \nDetails: "+e+"\n\n");
@@ -220,7 +217,7 @@ public class Main {
                         +winning);
 
         System.out.println("\n3.) For the year 2016 get the extra runs conceded per team. : \n"+countExtraRun
-                +"\n Total extra run make by all team for the year 2016 : "+count_extra_run2016);
+                +"\n Total extra run make by all team for the year 2016 : "+ countExtraRun2016);
 
         System.out.println("\n4.) For the year 2015 get the top economical bowlers. :\n"+economicBowler);
 
