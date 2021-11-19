@@ -2,12 +2,11 @@ package com.swarnava.ipl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
+    //private static List<Match> matches;
+
     private static final String PATH_MATCHES = "csv/matches.csv", PATH_DELIVERY = "csv/deliveries.csv", PATH_DEMO = "csv/demo.csv";
     static String next="", winner="", bowler, name;
     static int year, id, countExtraRun2016 =0, extraRun, run, salary;
@@ -22,6 +21,7 @@ public class Main {
     private static final HashMap<String, Integer> myScenario = new HashMap<String, Integer>();//for question 5
     private static final HashMap<String, Integer> runHm = new HashMap<String, Integer>();
     private static final HashMap<String, Float> overHm = new HashMap<String, Float>();
+
 
 
 
@@ -174,16 +174,16 @@ public class Main {
 
     public static void main(String[] args)   {
 
-
-        // fetching 1st csv file and process with required data : Matches
-        try{
-            scanMatches();
-        }catch(FileNotFoundException e){
+        // getting matches data from matches.csv file
+        List<Match> matches = null;
+        try {
+            matches = getMatchesData();
+        } catch (FileNotFoundException e) {
             System.out.println("File not found : "+ PATH_MATCHES +"\nDetails: "+e);
+            e.printStackTrace();
         }
-        catch(Exception e){
-            System.out.println("UNKNOWN exception handled while process file-1 : \nDetails: "+e+"\n\n");
-        }
+
+        NumberOfMatchesPlayedPerYear(matches);
 
 
         // fetching 2nd csv file and process with required data : Deliveries
@@ -207,6 +207,7 @@ public class Main {
         }
 
         //Outputs
+        /*
         System.out.println(
                 "1.) Number of matches played per year for all the years in IPL. : \n"
                         +noOfMatch);
@@ -228,9 +229,81 @@ public class Main {
         System.out.println("\nrunHm: \n"+runHm);
         System.out.println("\noverHm: \n"+overHm);
 
-
-
+         */
 
     }
+
+    static List<Match> getMatchesData() throws FileNotFoundException {
+        List<Match> matchList = new ArrayList<Match>();
+        Match object;
+        Scanner sc = new Scanner(new File(PATH_MATCHES));
+        sc.useDelimiter("\n");   //sets the delimiter pattern to get line wise
+        sc.next();//to eliminate heading, otherwise NumberFormatException happen
+        while (sc.hasNext()) {
+            next = sc.next();
+            String values[] = next.split(","); // splitting value from line
+            object = null;
+            object = new Match();
+
+            object.setId(Integer.parseInt(values[0]));
+            object.setSeason(Integer.parseInt(values[1]));
+            object.setCity(values[2]);
+            object.setDate(values[3]);
+            object.setTeam1(values[4]);
+            object.setTeam2(values[5]);
+            object.setTossWinner(values[6]);
+            object.setTossDecision(values[7]);
+            object.setResult(values[8]);
+            object.setDlApplied(Integer.parseInt(values[9]));
+            object.setWinner(values[10]);
+            object.setWinByRuns(Integer.parseInt(values[11]));
+            object.setWinByWickets(Integer.parseInt(values[12]));
+            object.setPlayerOfMatch(values[13]);
+            object.setVenue(values[14]);
+            object.setUmpire1(values[15]);
+            object.setUmpire2(values[16]);
+            object.setUmpire3(values[17]);
+
+            matchList.add(object);
+        }
+        sc.close();
+        return matchList;
+    }
+
+    private static  void NumberOfMatchesPlayedPerYear(List<Match> matches){
+        HashMap<Integer, Integer> noOfMatch = new HashMap<Integer, Integer>();  //for question 1
+        int i, year;
+
+        //Match obj = matches.get(0);
+
+        System.out.println("\n\nSize = "+matches.size()+"\n");
+
+        for (i=0; i<matches.size(); i++){
+            year = matches.get(i).getSeason();
+
+            System.out.print(","+year);
+
+
+            if (noOfMatch.containsKey(year)) {
+                noOfMatch.put(year, noOfMatch.get(year)+1);
+            } else {
+                noOfMatch.put(year, 1);
+            }
+
+
+        }
+         System.out.println(" \n\nAfter Collect data from matches 1st time : \n"+noOfMatch);
+    }
+
+     
+
+
+
+
+
+
+
+
+
 }
 
