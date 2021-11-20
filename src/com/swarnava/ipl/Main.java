@@ -5,47 +5,12 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Main {
-    // private static List<Match> matches;
-
     private static final String PATH_MATCHES = "csv/matches.csv", PATH_DELIVERY = "csv/deliveries.csv", PATH_DEMO = "csv/demo.csv";
-    static String next="", winner="", bowler, name;
-    static int year, id, countExtraRun2016 =0, extraRun, run, salary;
-    static float over, economicRate;
+    static String next="";
+    static int id;
 
-
-    private static final HashMap<String, Integer> myScenario = new HashMap<String, Integer>();//for question 5
     private static final HashMap<String, Integer> runHm = new HashMap<String, Integer>();
     private static final HashMap<String, Float> overHm = new HashMap<String, Float>();
-
-
-    static boolean scanDemo() throws FileNotFoundException{
-        Scanner sc = new Scanner(new File(PATH_DEMO));
-        sc.useDelimiter("\n");   //sets the delimiter pattern
-        sc.next(); //to eliminate heading, otherwise NumberFormatException happen
-        while (sc.hasNext()) {
-            next = sc.next();
-            String values[] = next.split(",");
-
-            name = values[0];
-            salary = Integer.parseInt(values[3].trim()+"");
-
-            // 5.) My scenario: list name whose salary more than 29k.
-            if(salary>29000){
-                if(myScenario.containsKey(name)){
-                    myScenario.put(name, myScenario.get(name)+salary);
-                }else{
-                    myScenario.put(name, salary);
-                }
-            }
-
-        }
-        sc.close();
-        System.out.println("\n5.) My scenario: list name whose salary more than 29k. :\n"+myScenario);
-
-        return true;
-    }
-
-
 
     public static void main(String[] args)   {
 
@@ -67,103 +32,13 @@ public class Main {
             e.printStackTrace();
         }
 
+        // calling methods to solve problems
         NumberOfMatchesPlayedPerYear(matches);
         NumberOfMatchesWonOfAllTeam(matches);
         getTheExtraRunsConcededPerTeamForParticularYear(matches, deliveries, 2016);
-        getTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
+        //getTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
+        getTheWinnersWhoWinInAParticularCity(matches, "Kolkata");
 
-
-
-
-        // fetching 3rd csv file and process with required data : (My scenario: demo.csv)
-        try{
-            scanDemo();
-        }catch(FileNotFoundException e){
-            System.out.println("File not found : "+ PATH_DEMO +"\nDetails: "+e);
-        }
-        catch(Exception e){
-            System.out.println("UNKNOWN exception handled while process file-3 : \nDetails: "+e+"\n\n");
-        }
-
-    }
-
-
-    private static void NumberOfMatchesPlayedPerYear(List<Match> matches){
-        HashMap<Integer, Integer> noOfMatch = new HashMap<Integer, Integer>();  //for question 1
-        int i, year;
-
-        //Match obj = matches.get(0);
-
-        System.out.println("\n\nSize = "+matches.size()+"\n");
-
-        for (i=0; i<matches.size(); i++){
-            year = matches.get(i).getSeason();
-
-            System.out.print(","+year);
-
-
-            if (noOfMatch.containsKey(year)) {
-                noOfMatch.put(year, noOfMatch.get(year)+1);
-            } else {
-                noOfMatch.put(year, 1);
-            }
-
-
-        }
-         System.out.println(" \n\n1.) After Collect data from matches 1st time : \n"+noOfMatch);
-    }
-
-    private static void NumberOfMatchesWonOfAllTeam(List<Match> matches){
-        HashMap<String, Integer> winning = new HashMap<String, Integer>();
-        String winner = "";
-        // 2. Number of matches won of all teams over all the years of IPL.
-        for (int i=0; i<matches.size(); i++){
-            winner = matches.get(i).getWinner();
-            if (winning.containsKey(winner)){
-                winning.put(winner, winning.get(winner)+1);
-            } else{
-                winning.put(winner, 1);
-            }
-        }
-        winning.remove(""); //remove null/blank key element
-        System.out.println(
-                "\n2.) Number of matches won of all teams over all the years of IPL. : \n"
-                        +winning);
-    }
-
-    private static void getTheExtraRunsConcededPerTeamForParticularYear(List<Match> matches, List<Delivery> deliveries, int targetYear){
-        HashMap<Integer, String> winnerList = new HashMap<Integer, String>();       //for question 3 : to collect id from matches.csv
-        HashMap<String, Integer> trackExtraRun = new HashMap<String, Integer>();    //for question 3
-        String winner = "";
-        int countExtraRun = 0, extraRun = 0, id;
-
-        // getting season and winner list
-        for (int i=0; i<matches.size(); i++) {
-            int year = matches.get(i).getSeason();
-            if (year == targetYear){
-                winner = matches.get(i).getWinner();
-                winnerList.put(matches.get(i).getId(), winner); // if year match, then put id with winner
-            }
-        }
-
-        // calculate einner list
-        for (int i=0; i<deliveries.size(); i++) {
-            id = deliveries.get(i).getMatchId();
-            if ( winnerList.containsKey(id) ) { // is winner belong from same i
-                winner = winnerList.get(id);
-                extraRun = deliveries.get(i).getExtraRuns();
-
-                if(trackExtraRun.containsKey(winner)){
-                    trackExtraRun.put(winner, trackExtraRun.get(winner)+extraRun);
-                }else{
-                    trackExtraRun.put(winner, extraRun);
-                }
-                countExtraRun += extraRun;
-            }
-        }
-
-        System.out.println("\n3.) For the year "+targetYear+" get the extra runs conceded per team. : \n"+trackExtraRun
-                +"\n Total extra run make by all team for the year "+targetYear+" : "+ countExtraRun);
     }
 
     private static void getTheTopEconomicalBowlersForParticularYear(List<Match> matches, List<Delivery> deliveries, int targetYear){
@@ -171,9 +46,11 @@ public class Main {
         HashMap<String, ArrayList<Float>> getEconomicBowler = new HashMap<String, ArrayList<Float>>();
         String bowler="";
         float over, run;
+        int year;
 
         // getting id list
         for (int i=0; i<matches.size(); i++) {
+            year = matches.get(i).getSeason();
             if (year == targetYear) {
                 IdList.add(matches.get(i).getId());
             }
@@ -235,6 +112,93 @@ public class Main {
 
     }
 
+
+
+    private static void NumberOfMatchesPlayedPerYear(List<Match> matches){
+        HashMap<Integer, Integer> noOfMatch = new HashMap<Integer, Integer>();  //for question 1
+        int i, year;
+
+        //Match obj = matches.get(0);
+
+        System.out.println("\n\nSize = "+matches.size()+"\n");
+
+        for (i=0; i<matches.size(); i++){
+            year = matches.get(i).getSeason();
+
+            System.out.print(","+year);
+
+
+            if (noOfMatch.containsKey(year)) {
+                noOfMatch.put(year, noOfMatch.get(year)+1);
+            } else {
+                noOfMatch.put(year, 1);
+            }
+
+
+        }
+        System.out.println(" \n\n1.) After Collect data from matches 1st time : \n"+noOfMatch);
+    }
+    private static void NumberOfMatchesWonOfAllTeam(List<Match> matches){
+        HashMap<String, Integer> winning = new HashMap<String, Integer>();
+        String winner = "";
+        // 2. Number of matches won of all teams over all the years of IPL.
+        for (int i=0; i<matches.size(); i++){
+            winner = matches.get(i).getWinner();
+            if (winning.containsKey(winner)){
+                winning.put(winner, winning.get(winner)+1);
+            } else{
+                winning.put(winner, 1);
+            }
+        }
+        winning.remove(""); //remove null/blank key element
+        System.out.println(
+                "\n2.) Number of matches won of all teams over all the years of IPL. : \n"
+                        +winning);
+    }
+    private static void getTheExtraRunsConcededPerTeamForParticularYear(List<Match> matches, List<Delivery> deliveries, int targetYear){
+        HashMap<Integer, String> winnerList = new HashMap<Integer, String>();       //for question 3 : to collect id from matches.csv
+        HashMap<String, Integer> trackExtraRun = new HashMap<String, Integer>();    //for question 3
+        String winner = "";
+        int countExtraRun = 0, extraRun = 0, id;
+
+        // getting season and winner list
+        for (int i=0; i<matches.size(); i++) {
+            int year = matches.get(i).getSeason();
+            if (year == targetYear){
+                winner = matches.get(i).getWinner();
+                winnerList.put(matches.get(i).getId(), winner); // if year match, then put id with winner
+            }
+        }
+
+        // calculate einner list
+        for (int i=0; i<deliveries.size(); i++) {
+            id = deliveries.get(i).getMatchId();
+            if ( winnerList.containsKey(id) ) { // is winner belong from same i
+                winner = winnerList.get(id);
+                extraRun = deliveries.get(i).getExtraRuns();
+
+                if(trackExtraRun.containsKey(winner)){
+                    trackExtraRun.put(winner, trackExtraRun.get(winner)+extraRun);
+                }else{
+                    trackExtraRun.put(winner, extraRun);
+                }
+                countExtraRun += extraRun;
+            }
+        }
+
+        System.out.println("\n3.) For the year "+targetYear+" get the extra runs conceded per team. : \n"+trackExtraRun
+                +"\n Total extra run make by all team for the year "+targetYear+" : "+ countExtraRun);
+    }
+    private static void getTheWinnersWhoWinInAParticularCity(List<Match> matches, String targetCity){
+        Set<String> winners = new HashSet<String>() ;
+        System.out.println("\n5.) Winners who win in the city: "+targetCity);
+        for (int i=0; i<matches.size(); i++) {
+            if (matches.get(i).getCity().equals(targetCity)){
+                winners.add(matches.get(i).getWinner());
+            }
+        }
+        System.out.print(winners);
+    }
     static List<Match> getMatchesData() throws FileNotFoundException {
         List<Match> matchList = new ArrayList<Match>();
         Match object;
@@ -271,7 +235,6 @@ public class Main {
         sc.close();
         return matchList;
     }
-
     static List<Delivery> getDeliveriesData() throws FileNotFoundException {
         List<Delivery> deliveryList = new ArrayList<Delivery>();
         Delivery object;
