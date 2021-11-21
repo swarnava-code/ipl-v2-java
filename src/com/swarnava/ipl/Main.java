@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Main {
-    private static final String PATH_MATCHES = "csv/matches.csv", PATH_DELIVERY = "csv/deliveries.csv", PATH_DEMO = "csv/demo.csv";
+    private static final String PATH_MATCHES = "csv/matches.csv", PATH_DELIVERY = "csv/deliveries.csv";
     static String next="";
     static int id;
 
@@ -14,169 +14,126 @@ public class Main {
 
     public static void main(String[] args)   {
 
-        // getting matches data from matches.csv file
         List<Match> matches = null;
         try {
-            matches = getMatchesData();
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found : "+ PATH_MATCHES +"\nDetails: "+e);
+            matches = getMatchesData(PATH_MATCHES);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // getting deliveries data from deliveries.csv file
         List<Delivery> deliveries = null;
         try {
-            deliveries = getDeliveriesData();
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found : "+ PATH_DELIVERY +"\nDetails: "+e);
+            deliveries = getDeliveriesData(PATH_DELIVERY);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // calling methods to solve problems
-        NumberOfMatchesPlayedPerYear(matches);
-        NumberOfMatchesWonOfAllTeam(matches);
-        getTheExtraRunsConcededPerTeamForParticularYear(matches, deliveries, 2016);
-        //getTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
-        getTheWinnersWhoWinInAParticularCity(matches, "Kolkata");
+
+        printNumberOfMatchesPlayedPerYear(matches);
+        printNumberOfMatchesWonOfAllTeam(matches);
+        printTheExtraRunsConcededPerTeamForParticularYear(matches, deliveries, 2016);
+        printTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
+        printTheWinnersWhoWinInAParticularCityLeastOneTime(matches, "Kolkata");
 
     }
 
-    private static void getTheTopEconomicalBowlersForParticularYear(List<Match> matches, List<Delivery> deliveries, int targetYear){
+
+    private static void printTheTopEconomicalBowlersForParticularYear(List<Match> matches, List<Delivery> deliveries, int targetYear){
         List<Integer> IdList = new LinkedList<Integer>();
-        HashMap<String, ArrayList<Float>> getEconomicBowler = new HashMap<String, ArrayList<Float>>();
+        Map<String, List<Float>> bowlerByEconomy = new HashMap<String, List<Float>>();
+        // List<Delivery> trackEconomicBowler = new LinkedList<>();
         String bowler="";
         float over, run;
         int year;
 
-        // getting id list
-        for (int i=0; i<matches.size(); i++) {
-            year = matches.get(i).getSeason();
+        //for (int i=0; i<matches.size(); i++) {
+        for(Match match : matches) {
+            year = match.getSeason();
             if (year == targetYear) {
-                IdList.add(matches.get(i).getId());
+                IdList.add(match.getId());
             }
         }
 
-        System.out.println("Economic Bowlers:\n"+IdList);
-        // calculate einner list
-        for (int i=0; i<deliveries.size(); i++) {
+        for(int i=0; i<deliveries.size(); i++) {
             id = deliveries.get(i).getMatchId();
-            if ( IdList.contains(id) ) {
+            if( IdList.contains(id) ) {
                 bowler = deliveries.get(i).getBowler();
                 over = deliveries.get(i).getOver();
                 run = deliveries.get(i).getTotalRuns();
 
-                System.out.println(over+":"+run);
-                if(getEconomicBowler.containsKey(bowler)){
-                    over += getEconomicBowler.get(bowler).get(0);
-                    run += getEconomicBowler.get(bowler).get(1);
+                if(bowlerByEconomy.containsKey(bowler)){
+                    over += bowlerByEconomy.get(bowler).get(0);
+                    run += bowlerByEconomy.get(bowler).get(1);
                     ArrayList<Float> row = new ArrayList<Float>();
                     row.add(0, over);
                     row.add(1, run);
-                    getEconomicBowler.put(bowler, row);
+                    bowlerByEconomy.put(bowler, row);
                 }else{
-                    ArrayList<Float> row = new ArrayList<Float>();
+                    List<Float> row = new ArrayList<Float>();
                     row.add(0, over);
                     row.add(1, run);
-                    getEconomicBowler.put(bowler, row);
+                    bowlerByEconomy.put(bowler, row);
 
                 }
             }
         }
 
         float res=0;
-        ArrayList<Float> arrayList = new ArrayList<Float>();
-        for(String key : getEconomicBowler.keySet() ){
-            res = getEconomicBowler.get(key).get(1) / getEconomicBowler.get(key).get(0);
-            System.out.println(":"+res);
+        List<Float> bowlersEconomy = new ArrayList<Float>();
+        for(String key : bowlerByEconomy.keySet() ) {
+            bowlersEconomy.add(bowlerByEconomy.get(key).get(0) / bowlerByEconomy.get(key).get(1));
         }
 
 
-
-        /*
-        // 4.) For the year 2015 get the top economical bowlers.
-
-            for(String key : runHm.keySet()) {
-                run = runHm.get(key);
-                over = overHm.get(key);
-                economicRate = run / over;
-
-                if(economicBowler.containsKey(key)){
-                    economicBowler.put(key, economicBowler.get(key)+ economicRate);
-                }else{
-                    economicBowler.put(key, economicRate);
-                }
-            }
-         */
-
-        System.out.println("\n4.) For the year 2015 get the top economical bowlers. :\n"+getEconomicBowler);
+        System.out.print("\n4.) For the year 2015 get the top economical bowlers. :\n"+bowlersEconomy);
 
     }
-
-
-
-    private static void NumberOfMatchesPlayedPerYear(List<Match> matches){
-        HashMap<Integer, Integer> noOfMatch = new HashMap<Integer, Integer>();  //for question 1
-        int i, year;
-
-        //Match obj = matches.get(0);
-
-        System.out.println("\n\nSize = "+matches.size()+"\n");
-
-        for (i=0; i<matches.size(); i++){
-            year = matches.get(i).getSeason();
-
-            System.out.print(","+year);
-
-
-            if (noOfMatch.containsKey(year)) {
-                noOfMatch.put(year, noOfMatch.get(year)+1);
+    private static void printNumberOfMatchesPlayedPerYear(List<Match> matches){
+        Map<Integer, Integer> countNoOfMatchPerYear = new HashMap<Integer, Integer>();
+        int year;
+        for (Match match : matches) {
+            year = match.getSeason();
+            if (countNoOfMatchPerYear.containsKey(year)) {
+                countNoOfMatchPerYear.put(year, countNoOfMatchPerYear.get(year)+1);
             } else {
-                noOfMatch.put(year, 1);
+                countNoOfMatchPerYear.put(year, 1);
             }
-
-
         }
-        System.out.println(" \n\n1.) After Collect data from matches 1st time : \n"+noOfMatch);
+        System.out.println(" \n\n1.) After Collect data from matches 1st time : \n"+countNoOfMatchPerYear);
     }
-    private static void NumberOfMatchesWonOfAllTeam(List<Match> matches){
-        HashMap<String, Integer> winning = new HashMap<String, Integer>();
+    private static void printNumberOfMatchesWonOfAllTeam(List<Match> matches){
+        HashMap<String, Integer> trackNoOfMatchesWinByTeam = new HashMap<String, Integer>();
         String winner = "";
-        // 2. Number of matches won of all teams over all the years of IPL.
-        for (int i=0; i<matches.size(); i++){
-            winner = matches.get(i).getWinner();
-            if (winning.containsKey(winner)){
-                winning.put(winner, winning.get(winner)+1);
+        for (Match match : matches){
+            winner = match.getWinner();
+            if (trackNoOfMatchesWinByTeam.containsKey(winner)){
+                trackNoOfMatchesWinByTeam.put(winner, trackNoOfMatchesWinByTeam.get(winner)+1);
             } else{
-                winning.put(winner, 1);
+                trackNoOfMatchesWinByTeam.put(winner, 1);
             }
         }
-        winning.remove(""); //remove null/blank key element
+        trackNoOfMatchesWinByTeam.remove("");
         System.out.println(
                 "\n2.) Number of matches won of all teams over all the years of IPL. : \n"
-                        +winning);
+                        +trackNoOfMatchesWinByTeam);
     }
-    private static void getTheExtraRunsConcededPerTeamForParticularYear(List<Match> matches, List<Delivery> deliveries, int targetYear){
-        HashMap<Integer, String> winnerList = new HashMap<Integer, String>();       //for question 3 : to collect id from matches.csv
-        HashMap<String, Integer> trackExtraRun = new HashMap<String, Integer>();    //for question 3
+    private static void printTheExtraRunsConcededPerTeamForParticularYear(List<Match> matches, List<Delivery> deliveries, int targetYear){
+        Map<Integer, String> listOfIdAndWinner = new HashMap<Integer, String>();
+        Map<String, Integer> trackExtraRun = new HashMap<String, Integer>();    //for question 3
         String winner = "";
-        int countExtraRun = 0, extraRun = 0, id;
+        int countExtraRun = 0, extraRun = 0, matchId;
 
-        // getting season and winner list
-        for (int i=0; i<matches.size(); i++) {
-            int year = matches.get(i).getSeason();
-            if (year == targetYear){
-                winner = matches.get(i).getWinner();
-                winnerList.put(matches.get(i).getId(), winner); // if year match, then put id with winner
+        for (Match match : matches) {
+            if (match.getSeason() == targetYear){
+                listOfIdAndWinner.put (match.getId(), match.getWinner());
             }
         }
 
-        // calculate einner list
-        for (int i=0; i<deliveries.size(); i++) {
-            id = deliveries.get(i).getMatchId();
-            if ( winnerList.containsKey(id) ) { // is winner belong from same i
-                winner = winnerList.get(id);
-                extraRun = deliveries.get(i).getExtraRuns();
-
+        for (Delivery delivery : deliveries) {
+            matchId = delivery.getMatchId();
+            if ( listOfIdAndWinner.containsKey(matchId) ) {
+                winner = listOfIdAndWinner.get(matchId);
+                extraRun = delivery.getExtraRuns();
                 if(trackExtraRun.containsKey(winner)){
                     trackExtraRun.put(winner, trackExtraRun.get(winner)+extraRun);
                 }else{
@@ -189,25 +146,26 @@ public class Main {
         System.out.println("\n3.) For the year "+targetYear+" get the extra runs conceded per team. : \n"+trackExtraRun
                 +"\n Total extra run make by all team for the year "+targetYear+" : "+ countExtraRun);
     }
-    private static void getTheWinnersWhoWinInAParticularCity(List<Match> matches, String targetCity){
+    private static void printTheWinnersWhoWinInAParticularCityLeastOneTime(List<Match> matches, String targetCity){
         Set<String> winners = new HashSet<String>() ;
         System.out.println("\n5.) Winners who win in the city: "+targetCity);
-        for (int i=0; i<matches.size(); i++) {
-            if (matches.get(i).getCity().equals(targetCity)){
-                winners.add(matches.get(i).getWinner());
+        for (Match match : matches) {
+            if (match.getCity().equals(targetCity)){
+                winners.add(match.getWinner());
             }
         }
         System.out.print(winners);
     }
-    static List<Match> getMatchesData() throws FileNotFoundException {
+
+    static List<Match> getMatchesData(String PATH_MATCHES) throws FileNotFoundException {
         List<Match> matchList = new ArrayList<Match>();
         Match object;
         Scanner sc = new Scanner(new File(PATH_MATCHES));
-        sc.useDelimiter("\n");   //sets the delimiter pattern to get line wise
-        sc.next();//to eliminate heading, otherwise NumberFormatException happen
+        sc.useDelimiter("\n");
+        sc.next(); // to eliminate heading text, ignore NumberFormatException
         while (sc.hasNext()) {
             next = sc.next();
-            String values[] = next.split(","); // splitting value from line
+            String values[] = next.split(",");
             object = null;
             object = new Match();
 
@@ -235,15 +193,15 @@ public class Main {
         sc.close();
         return matchList;
     }
-    static List<Delivery> getDeliveriesData() throws FileNotFoundException {
+    static List<Delivery> getDeliveriesData(String PATH_DELIVERY) throws FileNotFoundException {
         List<Delivery> deliveryList = new ArrayList<Delivery>();
         Delivery object;
         Scanner sc = new Scanner(new File(PATH_DELIVERY));
-        sc.useDelimiter("\n");   //sets the delimiter pattern to get line wise
-        sc.next(); //to eliminate heading, otherwise NumberFormatException happen
+        sc.useDelimiter("\n");
+        sc.next(); // to eliminate head txt, otherwise NumberFormatException happen
         while (sc.hasNext()) {
             next = sc.next();
-            String values[] = next.split(","); // splitting value from line
+            String values[] = next.split(",");
             object = null;
             object = new Delivery();
 
@@ -274,5 +232,6 @@ public class Main {
         sc.close();
         return deliveryList;
     }
+
 }
 
