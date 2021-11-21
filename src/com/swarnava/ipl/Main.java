@@ -6,8 +6,6 @@ import java.util.*;
 
 public class Main {
     private static final String PATH_MATCHES = "csv/matches.csv", PATH_DELIVERY = "csv/deliveries.csv";
-    static String next="";
-    static int id;
 
     private static final HashMap<String, Integer> runHm = new HashMap<String, Integer>();
     private static final HashMap<String, Float> overHm = new HashMap<String, Float>();
@@ -16,14 +14,14 @@ public class Main {
 
         List<Match> matches = null;
         try {
-            matches = getMatchesData(PATH_MATCHES);
+            matches = matchesData(PATH_MATCHES);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         List<Delivery> deliveries = null;
         try {
-            deliveries = getDeliveriesData(PATH_DELIVERY);
+            deliveries = deliveriesData(PATH_DELIVERY);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,14 +37,15 @@ public class Main {
 
 
     private static void printTheTopEconomicalBowlersForParticularYear(List<Match> matches, List<Delivery> deliveries, int targetYear){
-        List<Integer> IdList = new LinkedList<Integer>();
-        Map<String, List<Float>> bowlerByEconomy = new HashMap<String, List<Float>>();
-        // List<Delivery> trackEconomicBowler = new LinkedList<>();
-        String bowler="";
-        float over, run;
-        int year;
+        Set<Integer> IdList = new HashSet<>();
+        Map<String, List<Float>> bowlersOverAndRun = new HashMap<String, List<Float>>();
+        Map<String, Float> bowlersEconomy = new TreeMap<>();
 
-        //for (int i=0; i<matches.size(); i++) {
+
+        String bowler = "";
+        float over, run;
+        int year, id;
+
         for(Match match : matches) {
             year = match.getSeason();
             if (year == targetYear) {
@@ -54,42 +53,40 @@ public class Main {
             }
         }
 
-        for(int i=0; i<deliveries.size(); i++) {
-            id = deliveries.get(i).getMatchId();
+        for(Delivery delivery : deliveries) {
+            id = delivery.getMatchId();
             if( IdList.contains(id) ) {
-                bowler = deliveries.get(i).getBowler();
-                over = deliveries.get(i).getOver();
-                run = deliveries.get(i).getTotalRuns();
+                bowler = delivery.getBowler();
+                over = delivery.getOver();
+                run = delivery.getTotalRuns();
 
-                if(bowlerByEconomy.containsKey(bowler)){
-                    over += bowlerByEconomy.get(bowler).get(0);
-                    run += bowlerByEconomy.get(bowler).get(1);
+                if(bowlersOverAndRun.containsKey(bowler)){
+                    over += bowlersOverAndRun.get(bowler).get(0);
+                    run += bowlersOverAndRun.get(bowler).get(1);
                     ArrayList<Float> row = new ArrayList<Float>();
                     row.add(0, over);
                     row.add(1, run);
-                    bowlerByEconomy.put(bowler, row);
+                    bowlersOverAndRun.put(bowler, row);
                 }else{
                     List<Float> row = new ArrayList<Float>();
                     row.add(0, over);
                     row.add(1, run);
-                    bowlerByEconomy.put(bowler, row);
+                    bowlersOverAndRun.put(bowler, row);
 
                 }
             }
         }
 
-        float res=0;
-        List<Float> bowlersEconomy = new ArrayList<Float>();
-        for(String key : bowlerByEconomy.keySet() ) {
-            bowlersEconomy.add(bowlerByEconomy.get(key).get(0) / bowlerByEconomy.get(key).get(1));
+        for(String key : bowlersOverAndRun.keySet() ) {
+            bowlersEconomy.put( key, (bowlersOverAndRun.get(key).get(0) / bowlersOverAndRun.get(key).get(1)) );
         }
 
-
-        System.out.print("\n4.) For the year 2015 get the top economical bowlers. :\n"+bowlersEconomy);
+        System.out.print("\n4.) For the year 2015 get the top economical bowlers. :\n"+bowlersEconomy+"\nSize="+bowlersEconomy.size());
 
     }
+
     private static void printNumberOfMatchesPlayedPerYear(List<Match> matches){
-        Map<Integer, Integer> countNoOfMatchPerYear = new HashMap<Integer, Integer>();
+        Map<Integer, Integer> countNoOfMatchPerYear = new TreeMap<>();
         int year;
         for (Match match : matches) {
             year = match.getSeason();
@@ -148,7 +145,7 @@ public class Main {
     }
     private static void printTheWinnersWhoWinInAParticularCityLeastOneTime(List<Match> matches, String targetCity){
         Set<String> winners = new HashSet<String>() ;
-        System.out.println("\n5.) Winners who win in the city: "+targetCity);
+        System.out.println("\n\n5.) Winners who win in the city: "+targetCity);
         for (Match match : matches) {
             if (match.getCity().equals(targetCity)){
                 winners.add(match.getWinner());
@@ -156,16 +153,16 @@ public class Main {
         }
         System.out.print(winners);
     }
-
-    static List<Match> getMatchesData(String PATH_MATCHES) throws FileNotFoundException {
+    static List<Match> matchesData(String PATH_MATCHES) throws FileNotFoundException {
         List<Match> matchList = new ArrayList<Match>();
         Match object;
+        String line;
         Scanner sc = new Scanner(new File(PATH_MATCHES));
         sc.useDelimiter("\n");
         sc.next(); // to eliminate heading text, ignore NumberFormatException
         while (sc.hasNext()) {
-            next = sc.next();
-            String values[] = next.split(",");
+            line = sc.next();
+            String values[] = line.split(",");
             object = null;
             object = new Match();
 
@@ -193,15 +190,16 @@ public class Main {
         sc.close();
         return matchList;
     }
-    static List<Delivery> getDeliveriesData(String PATH_DELIVERY) throws FileNotFoundException {
+    static List<Delivery> deliveriesData(String PATH_DELIVERY) throws FileNotFoundException {
         List<Delivery> deliveryList = new ArrayList<Delivery>();
         Delivery object;
+        String line;
         Scanner sc = new Scanner(new File(PATH_DELIVERY));
         sc.useDelimiter("\n");
         sc.next(); // to eliminate head txt, otherwise NumberFormatException happen
         while (sc.hasNext()) {
-            next = sc.next();
-            String values[] = next.split(",");
+            line = sc.next();
+            String values[] = line.split(",");
             object = null;
             object = new Delivery();
 
@@ -232,6 +230,5 @@ public class Main {
         sc.close();
         return deliveryList;
     }
-
 }
 
