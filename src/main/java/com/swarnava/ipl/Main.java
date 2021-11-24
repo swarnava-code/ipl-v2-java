@@ -18,7 +18,7 @@ public class Main {
     static final String TABLE_NAME = "matches";
     static final String USER_NAME = "swarnava";
     static final String PASSWORD = "12345";
-    static final int COL1 = 1;
+    static final int COL1 = 1, COL2 = 2, COL3 = 3;
 
     public static void main(String[] args)   {
 
@@ -27,9 +27,9 @@ public class Main {
             //List<Delivery> deliveries = deliveriesData(PATH_DELIVERY);
             printNumberOfMatchesPlayedPerYear();
             printNumberOfMatchesWonOfAllTeam();
-//            printTheExtraRunsConcededPerTeamForParticularYear(matches, deliveries, 2016);
+//            printTheExtraRunsConcededPerTeamForParticularYear(2016);
 //            printTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
-//            printTheWinnersWhoWinInAParticularCityLeastOneTime(matches, "Kolkata");
+            printTheWinnersWhoWinInAParticularCityLeastOneTime("Kolkata");
 
         }
     }
@@ -160,13 +160,19 @@ public class Main {
                 +"\n Total extra run make by all team for the year "+targetYear+" : "+ countExtraRun);
     }
 
-    private static void printTheWinnersWhoWinInAParticularCityLeastOneTime(List<Match> matches, String targetCity){
+    private static void printTheWinnersWhoWinInAParticularCityLeastOneTime(String targetCity){
         Set<String> winners = new HashSet<String>() ;
         System.out.println("\n\n5.) Winners who win in the city: "+targetCity);
-        for (Match match : matches) {
-            if (match.getCity().equals(targetCity)){
-                winners.add(match.getWinner());
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT city, winner from "+TABLE_NAME);
+            while (resultSet.next()) {
+                if (targetCity.equals(resultSet.getString(COL1))) {
+                    winners.add(resultSet.getString(COL2));
+                }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         System.out.print(winners);
     }
