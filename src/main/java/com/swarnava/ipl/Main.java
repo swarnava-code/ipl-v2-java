@@ -1,6 +1,7 @@
 package com.swarnava.ipl;
 
 import java.io.File;
+import java.sql.*;
 import java.util.*;
 
 public class Main {
@@ -11,15 +12,37 @@ public class Main {
     private static final int MATCH_ID=0,INNING=1,BATTING_TEAM=2,BOWLING_TEAM=3,OVER=4,BALL=5,BATSMAN=6,NON_STRIKER=7,
             BOWLER=8,IS_SUPER_OVER=9,WIDE_RUNS=10,BYE_RUNS=11,LEGBYE_RUNS=12,NOBALL_RUNS=13,PENALTY_RUNS=14,
             BATSMAN_RUNS=15,EXTRA_RUNS=16,TOTAL_RUNS=17,PLAYER_DISMISSED=18,DISMISSAL_KIND=19,FIELDER=20;
+    static Connection connection = null;
+    static final String DATABASE_NAME = "new_schema1";
+    static final String URL = "jdbc:mysql://localhost:3306/"+ DATABASE_NAME;
+    static final String TABLE_NAME = "matches";
+    static final String USER_NAME = "swarnava";
+    static final String PASSWORD = "12345";
+    static final int COL1 = 1;
+    static final int COL2 = 2;
 
     public static void main(String[] args)   {
-        List<Match> matches = matchesData(PATH_MATCHES);
-        List<Delivery> deliveries = deliveriesData(PATH_DELIVERY);
-        printNumberOfMatchesPlayedPerYear(matches);
-        printNumberOfMatchesWonOfAllTeam(matches);
-        printTheExtraRunsConcededPerTeamForParticularYear(matches, deliveries, 2016);
-        printTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
-        printTheWinnersWhoWinInAParticularCityLeastOneTime(matches, "Kolkata");
+
+        if(setConnection()){
+            //List<Match> matches = matchesData(PATH_MATCHES);
+            //List<Delivery> deliveries = deliveriesData(PATH_DELIVERY);
+            printNumberOfMatchesPlayedPerYear();////
+//            printNumberOfMatchesWonOfAllTeam(matches);
+//            printTheExtraRunsConcededPerTeamForParticularYear(matches, deliveries, 2016);
+//            printTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
+//            printTheWinnersWhoWinInAParticularCityLeastOneTime(matches, "Kolkata");
+
+        }
+    }
+
+    static boolean setConnection(){
+        try {
+            connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     private static void printTheTopEconomicalBowlersForParticularYear(List<Match> matches, List<Delivery> deliveries, int targetYear){
@@ -62,16 +85,24 @@ public class Main {
         System.out.print("\n4.) For the year 2015 get the top economical bowlers. :\n"+bowlersEconomy+"\nSize="+bowlersEconomy.size());
     }
 
-    private static void printNumberOfMatchesPlayedPerYear(List<Match> matches){
+    private static void printNumberOfMatchesPlayedPerYear(){
         Map<Integer, Integer> countNoOfMatchPerYear = new TreeMap<>();
-        int year;
-        for (Match match : matches) {
-            year = match.getSeason();
-            if (countNoOfMatchPerYear.containsKey(year)) {
-                countNoOfMatchPerYear.put(year, countNoOfMatchPerYear.get(year)+1);
-            } else {
-                countNoOfMatchPerYear.put(year, 1);
+        int season = 0;
+        try {
+            Statement statement = connection.createStatement();
+            String query = "SELECT season FROM matches;";
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                season = Integer.parseInt(resultSet.getString(COL1));
+                if (countNoOfMatchPerYear.containsKey(season)) {
+                    countNoOfMatchPerYear.put(season, countNoOfMatchPerYear.get(season)+1);
+                } else {
+                    countNoOfMatchPerYear.put(season, 1);
+                }
             }
+        }catch (Exception e){
+            System.out.println("Error");
+            e.printStackTrace();
         }
         System.out.println(" \n\n1.) After Collect data from matches 1st time : \n"+countNoOfMatchPerYear);
     }
