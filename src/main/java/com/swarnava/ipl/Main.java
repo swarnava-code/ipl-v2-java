@@ -1,7 +1,6 @@
 package com.swarnava.ipl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Main {
@@ -173,7 +172,6 @@ public class Main {
     }
 
     static List<Delivery> deliveriesData(String PATH_DELIVERY) {
-
         List<Delivery> deliveryList = new ArrayList<Delivery>();
         try{
             Delivery delivery;
