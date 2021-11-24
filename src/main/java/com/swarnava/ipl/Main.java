@@ -19,15 +19,14 @@ public class Main {
     static final String USER_NAME = "swarnava";
     static final String PASSWORD = "12345";
     static final int COL1 = 1;
-    static final int COL2 = 2;
 
     public static void main(String[] args)   {
 
         if(setConnection()){
             //List<Match> matches = matchesData(PATH_MATCHES);
             //List<Delivery> deliveries = deliveriesData(PATH_DELIVERY);
-            printNumberOfMatchesPlayedPerYear();////
-//            printNumberOfMatchesWonOfAllTeam(matches);
+            printNumberOfMatchesPlayedPerYear();
+            printNumberOfMatchesWonOfAllTeam();
 //            printTheExtraRunsConcededPerTeamForParticularYear(matches, deliveries, 2016);
 //            printTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
 //            printTheWinnersWhoWinInAParticularCityLeastOneTime(matches, "Kolkata");
@@ -107,17 +106,27 @@ public class Main {
         System.out.println(" \n\n1.) After Collect data from matches 1st time : \n"+countNoOfMatchPerYear);
     }
 
-    private static void printNumberOfMatchesWonOfAllTeam(List<Match> matches){
+    private static void printNumberOfMatchesWonOfAllTeam(){
         HashMap<String, Integer> trackNoOfMatchesWinByTeam = new HashMap<String, Integer>();
         String winner = "";
-        for (Match match : matches){
-            winner = match.getWinner();
-            if (trackNoOfMatchesWinByTeam.containsKey(winner)){
-                trackNoOfMatchesWinByTeam.put(winner, trackNoOfMatchesWinByTeam.get(winner)+1);
-            } else{
-                trackNoOfMatchesWinByTeam.put(winner, 1);
+        try{
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT winner FROM "+TABLE_NAME);
+            while (resultSet.next()) {
+                winner = resultSet.getString(COL1);
+                if (trackNoOfMatchesWinByTeam.containsKey(winner)){
+                    trackNoOfMatchesWinByTeam.put(winner, trackNoOfMatchesWinByTeam.get(winner)+1);
+                } else{
+                    trackNoOfMatchesWinByTeam.put(winner, 1);
+                }
             }
+        }catch (Exception e){
+
         }
+
+
+
+
         trackNoOfMatchesWinByTeam.remove("");
         System.out.println(
                 "\n2.) Number of matches won of all teams over all the years of IPL. : \n"
