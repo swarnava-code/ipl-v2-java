@@ -6,60 +6,42 @@ import java.util.*;
 
 public class Main {
     private static final String PATH_MATCHES = "csv/matches.csv", PATH_DELIVERY = "csv/deliveries.csv";
-
-    private static final HashMap<String, Integer> runHm = new HashMap<String, Integer>();
-    private static final HashMap<String, Float> overHm = new HashMap<String, Float>();
+    private static final int ID=0,SEASON=1,CITY=2,DATE=3,TEAM1=4,TEAM2=5,TOSS_WINNER=6,TOSS_DECISION=7,RESULT=8,
+            DL_APPLIED=9,WINNER=10,WIN_BY_RUNS=11,WIN_BY_WICKETS=12,PLAYER_OF_MATCH=13,VENUE=14,
+            UMPIRE1=15,UMPIRE2=16,UMPIRE3=17;
+    private static final int MATCH_ID=0,INNING=1,BATTING_TEAM=2,BOWLING_TEAM=3,OVER=4,BALL=5,BATSMAN=6,NON_STRIKER=7,
+            BOWLER=8,IS_SUPER_OVER=9,WIDE_RUNS=10,BYE_RUNS=11,LEGBYE_RUNS=12,NOBALL_RUNS=13,PENALTY_RUNS=14,
+            BATSMAN_RUNS=15,EXTRA_RUNS=16,TOTAL_RUNS=17,PLAYER_DISMISSED=18,DISMISSAL_KIND=19,FIELDER=20;
 
     public static void main(String[] args)   {
-
-        List<Match> matches = null;
-        try {
-            matches = matchesData(PATH_MATCHES);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        List<Delivery> deliveries = null;
-        try {
-            deliveries = deliveriesData(PATH_DELIVERY);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
+        List<Match> matches = matchesData(PATH_MATCHES);
+        List<Delivery> deliveries = deliveriesData(PATH_DELIVERY);
         printNumberOfMatchesPlayedPerYear(matches);
         printNumberOfMatchesWonOfAllTeam(matches);
         printTheExtraRunsConcededPerTeamForParticularYear(matches, deliveries, 2016);
         printTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
         printTheWinnersWhoWinInAParticularCityLeastOneTime(matches, "Kolkata");
-
     }
-
 
     private static void printTheTopEconomicalBowlersForParticularYear(List<Match> matches, List<Delivery> deliveries, int targetYear){
         Set<Integer> IdList = new HashSet<>();
         Map<String, List<Float>> bowlersOverAndRun = new HashMap<String, List<Float>>();
         Map<String, Float> bowlersEconomy = new TreeMap<>();
-
-
         String bowler = "";
         float over, run;
         int year, id;
-
         for(Match match : matches) {
             year = match.getSeason();
             if (year == targetYear) {
                 IdList.add(match.getId());
             }
         }
-
         for(Delivery delivery : deliveries) {
             id = delivery.getMatchId();
             if( IdList.contains(id) ) {
                 bowler = delivery.getBowler();
                 over = delivery.getOver();
                 run = delivery.getTotalRuns();
-
                 if(bowlersOverAndRun.containsKey(bowler)){
                     over += bowlersOverAndRun.get(bowler).get(0);
                     run += bowlersOverAndRun.get(bowler).get(1);
@@ -72,17 +54,13 @@ public class Main {
                     row.add(0, over);
                     row.add(1, run);
                     bowlersOverAndRun.put(bowler, row);
-
                 }
             }
         }
-
         for(String key : bowlersOverAndRun.keySet() ) {
             bowlersEconomy.put( key, (bowlersOverAndRun.get(key).get(0) / bowlersOverAndRun.get(key).get(1)) );
         }
-
         System.out.print("\n4.) For the year 2015 get the top economical bowlers. :\n"+bowlersEconomy+"\nSize="+bowlersEconomy.size());
-
     }
 
     private static void printNumberOfMatchesPlayedPerYear(List<Match> matches){
@@ -98,6 +76,7 @@ public class Main {
         }
         System.out.println(" \n\n1.) After Collect data from matches 1st time : \n"+countNoOfMatchPerYear);
     }
+
     private static void printNumberOfMatchesWonOfAllTeam(List<Match> matches){
         HashMap<String, Integer> trackNoOfMatchesWinByTeam = new HashMap<String, Integer>();
         String winner = "";
@@ -114,18 +93,17 @@ public class Main {
                 "\n2.) Number of matches won of all teams over all the years of IPL. : \n"
                         +trackNoOfMatchesWinByTeam);
     }
+
     private static void printTheExtraRunsConcededPerTeamForParticularYear(List<Match> matches, List<Delivery> deliveries, int targetYear){
         Map<Integer, String> listOfIdAndWinner = new HashMap<Integer, String>();
         Map<String, Integer> trackExtraRun = new HashMap<String, Integer>();    //for question 3
         String winner = "";
         int countExtraRun = 0, extraRun = 0, matchId;
-
         for (Match match : matches) {
             if (match.getSeason() == targetYear){
                 listOfIdAndWinner.put (match.getId(), match.getWinner());
             }
         }
-
         for (Delivery delivery : deliveries) {
             matchId = delivery.getMatchId();
             if ( listOfIdAndWinner.containsKey(matchId) ) {
@@ -139,10 +117,10 @@ public class Main {
                 countExtraRun += extraRun;
             }
         }
-
         System.out.println("\n3.) For the year "+targetYear+" get the extra runs conceded per team. : \n"+trackExtraRun
                 +"\n Total extra run make by all team for the year "+targetYear+" : "+ countExtraRun);
     }
+
     private static void printTheWinnersWhoWinInAParticularCityLeastOneTime(List<Match> matches, String targetCity){
         Set<String> winners = new HashSet<String>() ;
         System.out.println("\n\n5.) Winners who win in the city: "+targetCity);
@@ -153,81 +131,88 @@ public class Main {
         }
         System.out.print(winners);
     }
-    static List<Match> matchesData(String PATH_MATCHES) throws FileNotFoundException {
+
+    static List<Match> matchesData(String PATH_MATCHES) {
         List<Match> matchList = new ArrayList<Match>();
-        Match object;
-        String line;
-        Scanner sc = new Scanner(new File(PATH_MATCHES));
-        sc.useDelimiter("\n");
-        sc.next(); // to eliminate heading text, ignore NumberFormatException
-        while (sc.hasNext()) {
-            line = sc.next();
-            String values[] = line.split(",");
-            object = null;
-            object = new Match();
-
-            object.setId(Integer.parseInt(values[0]));
-            object.setSeason(Integer.parseInt(values[1]));
-            object.setCity(values[2]);
-            object.setDate(values[3]);
-            object.setTeam1(values[4]);
-            object.setTeam2(values[5]);
-            object.setTossWinner(values[6]);
-            object.setTossDecision(values[7]);
-            object.setResult(values[8]);
-            object.setDlApplied(Integer.parseInt(values[9]));
-            object.setWinner(values[10]);
-            object.setWinByRuns(Integer.parseInt(values[11]));
-            object.setWinByWickets(Integer.parseInt(values[12]));
-            object.setPlayerOfMatch(values[13]);
-            object.setVenue(values[14]);
-            object.setUmpire1(values[15]);
-            object.setUmpire2(values[16]);
-            object.setUmpire3(values[17]);
-
-            matchList.add(object);
+        try {
+            Match match;
+            String line;
+            Scanner sc = new Scanner(new File(PATH_MATCHES));
+            sc.useDelimiter("\n");
+            sc.next(); // to eliminate heading text, ignore NumberFormatException
+            while (sc.hasNext()) {
+                line = sc.next();
+                String values[] = line.split(",");
+                match = null;
+                match = new Match();
+                match.setId(Integer.parseInt(values[ID]));
+                match.setSeason(Integer.parseInt(values[SEASON]));
+                match.setCity(values[CITY]);
+                match.setDate(values[DATE]);
+                match.setTeam1(values[TEAM1]);
+                match.setTeam2(values[TEAM2]);
+                match.setTossWinner(values[TOSS_WINNER]);
+                match.setTossDecision(values[TOSS_DECISION]);
+                match.setResult(values[RESULT]);
+                match.setDlApplied(Integer.parseInt(values[DL_APPLIED]));
+                match.setWinner(values[WINNER]);
+                match.setWinByRuns(Integer.parseInt(values[WIN_BY_RUNS]));
+                match.setWinByWickets(Integer.parseInt(values[WIN_BY_WICKETS]));
+                match.setPlayerOfMatch(values[PLAYER_OF_MATCH]);
+                match.setVenue(values[VENUE]);
+                match.setUmpire1(values[UMPIRE1]);
+                match.setUmpire2(values[UMPIRE2]);
+                match.setUmpire3(values[UMPIRE3]);
+                matchList.add(match);
+            }
+            sc.close();
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        sc.close();
         return matchList;
     }
-    static List<Delivery> deliveriesData(String PATH_DELIVERY) throws FileNotFoundException {
+
+    static List<Delivery> deliveriesData(String PATH_DELIVERY) {
+
         List<Delivery> deliveryList = new ArrayList<Delivery>();
-        Delivery object;
-        String line;
-        Scanner sc = new Scanner(new File(PATH_DELIVERY));
-        sc.useDelimiter("\n");
-        sc.next(); // to eliminate head txt, otherwise NumberFormatException happen
-        while (sc.hasNext()) {
-            line = sc.next();
-            String values[] = line.split(",");
-            object = null;
-            object = new Delivery();
-
-            object.setMatchId(Integer.parseInt(values[0]));
-            object.setInning(Integer.parseInt(values[1]));
-            object.setBattingTeam(values[2]);
-            object.setBowlingTeam(values[3]);
-            object.setOver(Integer.parseInt(values[4]));
-            object.setBall(Integer.parseInt(values[5]));
-            object.setBatsMan(values[6]);
-            object.setNonStriker(values[7]);
-            object.setBowler(values[8]);
-            object.setIsSuperOver(Integer.parseInt(values[9]));
-            object.setWideRuns(Integer.parseInt(values[10]));
-            object.setByeRuns(Integer.parseInt(values[11]));
-            object.setLegByeRuns(Integer.parseInt(values[12]));
-            object.setNoBallRuns(Integer.parseInt(values[13]));
-            object.setPenaltyRuns(Integer.parseInt(values[14]));
-            object.setBatsmanRuns(Integer.parseInt(values[15]));
-            object.setExtraRuns(Integer.parseInt(values[16]));
-            object.setTotalRuns(Integer.parseInt(values[17]));
-            object.setPlayerDismissed(values[18]);
-            object.setDismissalKind(values[19]);
-            object.setFielder(values[20]);
-
-            deliveryList.add(object);
+        try{
+            Delivery delivery;
+            String line;
+            Scanner sc = new Scanner(new File(PATH_DELIVERY));
+            sc.useDelimiter("\n");
+            sc.next(); // to eliminate head txt, otherwise NumberFormatException happen
+            while (sc.hasNext()) {
+                line = sc.next();
+                String values[] = line.split(",");
+                delivery = null;
+                delivery = new Delivery();
+                delivery.setMatchId(Integer.parseInt(values[MATCH_ID]));
+                delivery.setInning(Integer.parseInt(values[INNING]));
+                delivery.setBattingTeam(values[BATTING_TEAM]);
+                delivery.setBowlingTeam(values[BOWLING_TEAM]);
+                delivery.setOver(Integer.parseInt(values[OVER]));
+                delivery.setBall(Integer.parseInt(values[BALL]));
+                delivery.setBatsMan(values[BATSMAN]);
+                delivery.setNonStriker(values[NON_STRIKER]);
+                delivery.setBowler(values[BOWLER]);
+                delivery.setIsSuperOver(Integer.parseInt(values[IS_SUPER_OVER]));
+                delivery.setWideRuns(Integer.parseInt(values[WIDE_RUNS]));
+                delivery.setByeRuns(Integer.parseInt(values[BYE_RUNS]));
+                delivery.setLegByeRuns(Integer.parseInt(values[LEGBYE_RUNS]));
+                delivery.setNoBallRuns(Integer.parseInt(values[NOBALL_RUNS]));
+                delivery.setPenaltyRuns(Integer.parseInt(values[PENALTY_RUNS]));
+                delivery.setBatsmanRuns(Integer.parseInt(values[BATSMAN_RUNS]));
+                delivery.setExtraRuns(Integer.parseInt(values[EXTRA_RUNS]));
+                delivery.setTotalRuns(Integer.parseInt(values[TOTAL_RUNS]));
+                delivery.setPlayerDismissed(values[PLAYER_DISMISSED]);
+                delivery.setDismissalKind(values[DISMISSAL_KIND]);
+                delivery.setFielder(values[FIELDER]);
+                deliveryList.add(delivery);
+            }
+            sc.close();
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        sc.close();
         return deliveryList;
     }
 }
