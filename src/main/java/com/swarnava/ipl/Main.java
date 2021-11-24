@@ -15,7 +15,8 @@ public class Main {
     static Connection connection = null;
     static final String DATABASE_NAME = "new_schema1";
     static final String URL = "jdbc:mysql://localhost:3306/"+ DATABASE_NAME;
-    static final String TABLE_NAME = "matches";
+    static final String TABLE_MATCH = "matches";
+    static final String TABLE_DELIVERY = "deliveries2";
     static final String USER_NAME = "swarnava";
     static final String PASSWORD = "12345";
     static final int COL1 = 1, COL2 = 2, COL3 = 3;
@@ -23,16 +24,21 @@ public class Main {
     public static void main(String[] args)   {
 
         if(setConnection()){
-            //List<Match> matches = matchesData(PATH_MATCHES);
-            //List<Delivery> deliveries = deliveriesData(PATH_DELIVERY);
+            List<Match> matches = matchesData(PATH_MATCHES);
+            List<Delivery> deliveries = deliveriesData(PATH_DELIVERY);
+
             printNumberOfMatchesPlayedPerYear();
             printNumberOfMatchesWonOfAllTeam();
-//            printTheExtraRunsConcededPerTeamForParticularYear(2016);
-//            printTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
+            printTheExtraRunsConcededPerTeamForParticularYear(2016);
+            //printTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
             printTheWinnersWhoWinInAParticularCityLeastOneTime("Kolkata");
 
         }
     }
+
+    static int countInsert=0;
+
+
 
     static boolean setConnection(){
         try {
@@ -111,7 +117,7 @@ public class Main {
         String winner = "";
         try{
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT winner FROM "+TABLE_NAME);
+            ResultSet resultSet = statement.executeQuery("SELECT winner FROM "+ TABLE_MATCH);
             while (resultSet.next()) {
                 winner = resultSet.getString(COL1);
                 if (trackNoOfMatchesWinByTeam.containsKey(winner)){
@@ -121,40 +127,45 @@ public class Main {
                 }
             }
         }catch (Exception e){
-
         }
-
-
-
-
         trackNoOfMatchesWinByTeam.remove("");
         System.out.println(
                 "\n2.) Number of matches won of all teams over all the years of IPL. : \n"
                         +trackNoOfMatchesWinByTeam);
     }
 
-    private static void printTheExtraRunsConcededPerTeamForParticularYear(List<Match> matches, List<Delivery> deliveries, int targetYear){
+    private static void printTheExtraRunsConcededPerTeamForParticularYear(int targetYear){
         Map<Integer, String> listOfIdAndWinner = new HashMap<Integer, String>();
-        Map<String, Integer> trackExtraRun = new HashMap<String, Integer>();    //for question 3
+        Map<String, Integer> trackExtraRun = new HashMap<String, Integer>();
         String winner = "";
-        int countExtraRun = 0, extraRun = 0, matchId;
-        for (Match match : matches) {
-            if (match.getSeason() == targetYear){
-                listOfIdAndWinner.put (match.getId(), match.getWinner());
-            }
-        }
-        for (Delivery delivery : deliveries) {
-            matchId = delivery.getMatchId();
-            if ( listOfIdAndWinner.containsKey(matchId) ) {
-                winner = listOfIdAndWinner.get(matchId);
-                extraRun = delivery.getExtraRuns();
-                if(trackExtraRun.containsKey(winner)){
-                    trackExtraRun.put(winner, trackExtraRun.get(winner)+extraRun);
-                }else{
-                    trackExtraRun.put(winner, extraRun);
+        int countExtraRun = 0, extraRun = 0, matchId, season;
+        try{
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT id,season,winner FROM "+ TABLE_MATCH);
+            while (resultSet.next()) {
+                season = Integer.parseInt(resultSet.getString(COL2));
+                if (season == targetYear){
+                    listOfIdAndWinner.put (Integer.parseInt(resultSet.getString(COL1)), resultSet.getString(COL3));
                 }
-                countExtraRun += extraRun;
             }
+            resultSet = statement.executeQuery("SELECT match_id, extra_runs FROM "+ TABLE_DELIVERY);
+            boolean v = resultSet.next();
+            while (v) {
+                matchId = Integer.parseInt(resultSet.getString(COL1));
+                if ( listOfIdAndWinner.containsKey(matchId) ) {
+                    winner = listOfIdAndWinner.get(matchId);
+                    extraRun = Integer.parseInt(resultSet.getString(COL2));
+                    if(trackExtraRun.containsKey(winner)){
+                        trackExtraRun.put(winner, trackExtraRun.get(winner)+extraRun);
+                    }else{
+                        trackExtraRun.put(winner, extraRun);
+                    }
+                    countExtraRun += extraRun;
+                }
+                v=resultSet.next();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         System.out.println("\n3.) For the year "+targetYear+" get the extra runs conceded per team. : \n"+trackExtraRun
                 +"\n Total extra run make by all team for the year "+targetYear+" : "+ countExtraRun);
@@ -165,7 +176,7 @@ public class Main {
         System.out.println("\n\n5.) Winners who win in the city: "+targetCity);
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT city, winner from "+TABLE_NAME);
+            ResultSet resultSet = statement.executeQuery("SELECT city, winner from "+ TABLE_MATCH);
             while (resultSet.next()) {
                 if (targetCity.equals(resultSet.getString(COL1))) {
                     winners.add(resultSet.getString(COL2));
