@@ -3,6 +3,10 @@ import java.sql.*;
 import java.util.*;
 
 public class Main {
+    public static final int MATCH_ID = 1;
+    public static final int BOWLER = 9;
+    public static final int OVER = 5;
+    private static final int TOTAL_RUNS = 18;
     static Connection connection = null;
     static final String DATABASE_NAME = "new_schema1";
     static final String URL = "jdbc:mysql://localhost:3306/"+ DATABASE_NAME;
@@ -13,7 +17,7 @@ public class Main {
     static final int VIEW_COL1 = 1, VIEW_COL2 = 2, VIEW_COL3 = 3, VIEW_COL4 = 4;
 
     public static void main(String[] args)   {
-        if(setConnection()){
+        if (setConnection()) {
             printNumberOfMatchesPlayedPerYear();
             printNumberOfMatchesWonOfAllTeam();
             printTheExtraRunsConcededPerTeamForParticularYear(2016);
@@ -38,7 +42,7 @@ public class Main {
         Map<String, Float> bowlersEconomy = new TreeMap<>();
         String bowler = "", query;
         float over, run;
-        int year, id;
+        int id;
         Statement statement;
         try {
             statement = connection.createStatement();
@@ -48,14 +52,15 @@ public class Main {
                 idList.add(Integer.parseInt(idSet.getString(VIEW_COL1)));
             }
             String idListStr = idList.toString();
-            query = "Select match_id, bowler, over, total_runs from "+TABLE_DELIVERY+" where match_id in ("+(idListStr.substring(1,idListStr.length()-1))+") ";
+            idListStr = idListStr.substring(1,idListStr.length()-1);
+            query = "Select * from "+TABLE_DELIVERY+" where match_id in("+idListStr+") ";
             ResultSet idBowlerOverRun = statement.executeQuery(query);
             while (idBowlerOverRun.next()) {
-                id = Integer.parseInt(idBowlerOverRun.getString(VIEW_COL1));
+                id = idBowlerOverRun.getInt(MATCH_ID);
                 if (idList.contains(id)) {
-                    bowler = idBowlerOverRun.getString(VIEW_COL2);
-                    over = Float.parseFloat(idBowlerOverRun.getString(VIEW_COL3));
-                    run = Float.parseFloat(idBowlerOverRun.getString(VIEW_COL4));
+                    bowler = idBowlerOverRun.getString(BOWLER);
+                    over = Float.parseFloat(idBowlerOverRun.getString(OVER));
+                    run = Float.parseFloat(idBowlerOverRun.getString(TOTAL_RUNS));
                     if (bowlersOverAndRun.containsKey(bowler)) {
                         over += bowlersOverAndRun.get(bowler).get(0);
                         run += bowlersOverAndRun.get(bowler).get(1);
@@ -80,6 +85,7 @@ public class Main {
         System.out.print("\n4.) For the year 2015 get the top economical bowlers. :\n"+bowlersEconomy+"\nSize="+bowlersEconomy.size());
     }
 
+
     private static void printNumberOfMatchesPlayedPerYear(){
         Map<Integer, Integer> countNoOfMatchPerYear = new TreeMap<>();
         int season = 0, countNoOfMatch = 0;
@@ -87,7 +93,7 @@ public class Main {
         try(
                 Statement statement = connection.createStatement();
                 ResultSet countWinnerGroupBySeason = statement.executeQuery(query);
-                ) {
+        ) {
             while (countWinnerGroupBySeason.next()) {
                 season = Integer.parseInt(countWinnerGroupBySeason.getString(VIEW_COL1));
                 countNoOfMatch = Integer.parseInt(countWinnerGroupBySeason.getString(VIEW_COL2));
@@ -107,7 +113,7 @@ public class Main {
         try(
                 Statement statement = connection.createStatement();
                 ResultSet winnerCountList = statement.executeQuery(query);
-                ){
+        ){
             while (winnerCountList.next()) {
                 winner = winnerCountList.getString(VIEW_COL1);
                 count = Integer.parseInt(winnerCountList.getString(VIEW_COL2));
@@ -175,4 +181,3 @@ public class Main {
         System.out.print(winners);
     }
 }
-
