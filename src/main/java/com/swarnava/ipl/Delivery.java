@@ -1,10 +1,27 @@
 package com.swarnava.ipl;
 
 public class Delivery {
-    private int matchId, inning, over, ball, isSuperOver,
-            wideRuns, byeRuns, legByeRuns, noBallRuns, penaltyRuns, batsmanRuns, extraRuns, totalRuns;
-    private String battingTeam, bowlingTeam, batsMan, nonStriker, bowler,
-            playerDismissed, dismissalKind, fielder;
+    private Integer matchId;
+    private Integer inning;
+    private Integer over;
+    private Integer ball;
+    private Integer isSuperOver;
+    private Integer wideRuns;
+    private Integer byeRuns;
+    private Integer legByeRuns;
+    private Integer noBallRuns;
+    private Integer penaltyRuns;
+    private Integer batsmanRuns;
+    private Integer extraRuns;
+    private Integer totalRuns;
+    private String battingTeam;
+    private String bowlingTeam;
+    private String batsMan;
+    private String nonStriker;
+    private String bowler;
+    private String playerDismissed;
+    private String dismissalKind;
+    private String fielder;
 
     public int getMatchId() {
         return matchId;
