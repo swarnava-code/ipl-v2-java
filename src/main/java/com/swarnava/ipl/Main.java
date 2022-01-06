@@ -1,4 +1,5 @@
 package com.swarnava.ipl;
+
 import java.sql.*;
 import java.util.*;
 
@@ -36,7 +37,7 @@ public class Main {
         return true;
     }
 
-    private static void printTheTopEconomicalBowlersForParticularYear(int targetYear){
+    private static Map<String, Float> printTheTopEconomicalBowlersForParticularYear(int targetYear){
         Set<Integer> idList = new HashSet<>();
         Map<String, List<Float>> bowlersOverAndRun = new HashMap<String, List<Float>>();
         Map<String, Float> bowlersEconomy = new TreeMap<>();
@@ -79,14 +80,14 @@ public class Main {
             for (String key : bowlersOverAndRun.keySet()) {
                 bowlersEconomy.put(key, (bowlersOverAndRun.get(key).get(0) / bowlersOverAndRun.get(key).get(1)));
             }
-        }catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
         }
         System.out.print("\n4.) For the year 2015 get the top economical bowlers. :\n"+bowlersEconomy+"\nSize="+bowlersEconomy.size());
+        return bowlersEconomy;
     }
 
-
-    private static void printNumberOfMatchesPlayedPerYear(){
+    private static Map<Integer, Integer> printNumberOfMatchesPlayedPerYear(){
         Map<Integer, Integer> countNoOfMatchPerYear = new TreeMap<>();
         int season = 0, countNoOfMatch = 0;
         String query = "SELECT season, count(winner) FROM matches group by season;";;
@@ -103,10 +104,11 @@ public class Main {
             e.printStackTrace();
         }
         System.out.println(" \n\n1.) print Number Of Matches Played Per Year : \n"+countNoOfMatchPerYear);
+        return countNoOfMatchPerYear;
     }
 
-    private static void printNumberOfMatchesWonOfAllTeam(){
-        HashMap<String, Integer> trackNoOfMatchesWinByTeam = new HashMap<String, Integer>();
+    private static Map<String, Integer> printNumberOfMatchesWonOfAllTeam(){
+        Map<String, Integer> trackNoOfMatchesWinByTeam = new HashMap<String, Integer>();
         String winner = "";
         int count = 0;
         String query = "SELECT winner, count(winner) FROM matches group by winner ;";
@@ -126,9 +128,10 @@ public class Main {
         System.out.println(
                 "\n2.) Number of matches won of all teams over all the years of IPL. : \n"
                         +trackNoOfMatchesWinByTeam);
+        return trackNoOfMatchesWinByTeam;
     }
 
-    private static void printTheExtraRunsConcededPerTeamForParticularYear(int targetYear){
+    private static Map<String, Integer> printTheExtraRunsConcededPerTeamForParticularYear(int targetYear){
         Map<Integer, String> listOfIdAndWinner = new HashMap<Integer, String>();
         Map<String, Integer> trackExtraRun = new HashMap<String, Integer>();
         String winner = "", query = "SELECT id, winner FROM "+TABLE_MATCH+" where season = '"+targetYear+"';";
@@ -163,9 +166,10 @@ public class Main {
         }
         System.out.println("\n3.) For the year "+targetYear+" get the extra runs conceded per team. : \n"+trackExtraRun
                 +"\n Total extra run make by all team for the year "+targetYear+" : "+ countExtraRun);
+        return trackExtraRun;
     }
 
-    private static void printTheWinnersWhoWinInACityLeastOneTime(String targetCity){
+    private static Set<String> printTheWinnersWhoWinInACityLeastOneTime(String targetCity){
         Set<String> winners = new HashSet<String>() ;
         System.out.println("\n\n5.) Winners who win in the city: "+targetCity);
         String query = "SELECT distinct winner from "+ TABLE_MATCH +" where city = '"+targetCity+"';";
@@ -179,5 +183,6 @@ public class Main {
             e.printStackTrace();
         }
         System.out.print(winners);
+        return winners;
     }
 }
