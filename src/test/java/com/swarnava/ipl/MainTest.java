@@ -1,9 +1,7 @@
 package com.swarnava.ipl;
 
 import org.junit.jupiter.api.*;
-
 import java.util.*;
-
 import static com.swarnava.ipl.Main.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -53,6 +51,14 @@ class MainTest {
 
     @Test
     void testPrintTheWinnersWhoWinInACityLeastOneTime(){
-        fail("not implemented");
+        expectedWinnersWhoWinInACityLeastOneTime = Arrays.asList(
+                "Kolkata Knight Riders", "Gujarat Lions","Rising Pune Supergiant","Mumbai Indians","Chennai Super Kings","Rajasthan Royals",
+                "Kings XI Punjab","Kochi Tuskers Kerala","Royal Challengers Bangalore","Delhi Daredevils"
+        );
+        Collections.sort(expectedWinnersWhoWinInACityLeastOneTime);
+        assertIterableEquals(
+                expectedWinnersWhoWinInACityLeastOneTime,
+                actualWinnersWhoWinInACityLeastOneTime
+        );
     }
 }
