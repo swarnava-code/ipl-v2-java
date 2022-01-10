@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="90e7e5ae-0f51-4aca-b49a-a8ff01fb89b0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swarnava/ipl/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swarnava/ipl/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/swarnava/ipl/MainTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/swarnava/ipl/MainTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/swarnava/ipl/MainTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/swarnava/ipl/MainTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +47,7 @@
       <recent name="com.swarnava.ipl" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JUnit.MainTest">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.swarnava.ipl.Main" />
       <module name="IPL" />
@@ -61,8 +61,24 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="MainTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="IPL" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.swarnava.ipl.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.swarnava.ipl" />
+      <option name="MAIN_CLASS_NAME" value="com.swarnava.ipl.MainTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.MainTest" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
