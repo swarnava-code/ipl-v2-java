@@ -27,7 +27,7 @@ public class Main {
         }
     }
 
-    static boolean setConnection(){
+    protected static boolean setConnection(){
         try {
             connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
         } catch (SQLException e) {
@@ -37,7 +37,7 @@ public class Main {
         return true;
     }
 
-    private static Map<String, Float> printTheTopEconomicalBowlersForParticularYear(int targetYear){
+    protected static Map<String, Float> printTheTopEconomicalBowlersForParticularYear(int targetYear){
         Set<Integer> idList = new HashSet<>();
         Map<String, List<Float>> bowlersOverAndRun = new HashMap<String, List<Float>>();
         Map<String, Float> bowlersEconomy = new TreeMap<>();
@@ -87,7 +87,7 @@ public class Main {
         return bowlersEconomy;
     }
 
-    private static Map<Integer, Integer> printNumberOfMatchesPlayedPerYear(){
+    protected static Map<Integer, Integer> printNumberOfMatchesPlayedPerYear(){
         Map<Integer, Integer> countNoOfMatchPerYear = new TreeMap<>();
         int season = 0, countNoOfMatch = 0;
         String query = "SELECT season, count(winner) FROM matches group by season;";;
@@ -107,7 +107,7 @@ public class Main {
         return countNoOfMatchPerYear;
     }
 
-    private static Map<String, Integer> printNumberOfMatchesWonOfAllTeam(){
+    protected static Map<String, Integer> printNumberOfMatchesWonOfAllTeam(){
         Map<String, Integer> trackNoOfMatchesWinByTeam = new HashMap<String, Integer>();
         String winner = "";
         int count = 0;
@@ -131,7 +131,7 @@ public class Main {
         return trackNoOfMatchesWinByTeam;
     }
 
-    private static Map<String, Integer> printTheExtraRunsConcededPerTeamForParticularYear(int targetYear){
+    protected static Map<String, Integer> printTheExtraRunsConcededPerTeamForParticularYear(int targetYear){
         Map<Integer, String> listOfIdAndWinner = new HashMap<Integer, String>();
         Map<String, Integer> trackExtraRun = new HashMap<String, Integer>();
         String winner = "", query = "SELECT id, winner FROM "+TABLE_MATCH+" where season = '"+targetYear+"';";
@@ -169,7 +169,7 @@ public class Main {
         return trackExtraRun;
     }
 
-    private static Set<String> printTheWinnersWhoWinInACityLeastOneTime(String targetCity){
+    protected static Set<String> printTheWinnersWhoWinInACityLeastOneTime(String targetCity){
         Set<String> winners = new HashSet<String>() ;
         System.out.println("\n\n5.) Winners who win in the city: "+targetCity);
         String query = "SELECT distinct winner from "+ TABLE_MATCH +" where city = '"+targetCity+"';";
