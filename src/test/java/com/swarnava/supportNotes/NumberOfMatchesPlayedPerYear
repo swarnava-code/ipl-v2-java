@@ -1,0 +1,10 @@
+Hi,
+I open matches.csv file using LibreOffice, and noted down the following notes
+
+season = 2017
+id: 1 to 59
+noOfMatches = (59-1+1) = 59
+
+season = 2016
+id: 577 to 636
+noOfMatches = (636-577+1) = 60

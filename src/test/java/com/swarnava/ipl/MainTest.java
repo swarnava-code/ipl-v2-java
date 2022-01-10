@@ -30,27 +30,32 @@ class MainTest {
     }
 
     @Test
-    void testPrintNumberOfMatchesPlayedPerYear(){
+    void testNumberOfMatchesPlayedPerYear(){
+        int expectedNoOfMatches2016 = 60;
+        int expectedNoOfMatches2017 = 59;
+        int actualNoOfMatches2016 = actualNumberOfMatchesPlayedPerYear.get(2016);
+        int actualNoOfMatches2017 = actualNumberOfMatchesPlayedPerYear.get(2017);
+        assertEquals(expectedNoOfMatches2016, actualNoOfMatches2016);
+        assertEquals(expectedNoOfMatches2017, actualNoOfMatches2017);
+    }
+
+    @Test
+    void testNumberOfMatchesWonOfAllTeam(){
         fail("not implemented");
     }
 
     @Test
-    void testPrintNumberOfMatchesWonOfAllTeam(){
+    void testTheExtraRunsConcededPerTeamForParticularYear(){
         fail("not implemented");
     }
 
     @Test
-    void testPrintTheExtraRunsConcededPerTeamForParticularYear(){
+    void testTheTopEconomicalBowlersForParticularYear(){
         fail("not implemented");
     }
 
     @Test
-    void testPrintTheTopEconomicalBowlersForParticularYear(){
-        fail("not implemented");
-    }
-
-    @Test
-    void testPrintTheWinnersWhoWinInACityLeastOneTime(){
+    void testTheWinnersWhoWinInACityLeastOneTime(){
         expectedWinnersWhoWinInACityLeastOneTime = Arrays.asList(
                 "Kolkata Knight Riders", "Gujarat Lions","Rising Pune Supergiant","Mumbai Indians","Chennai Super Kings","Rajasthan Royals",
                 "Kings XI Punjab","Kochi Tuskers Kerala","Royal Challengers Bangalore","Delhi Daredevils"
