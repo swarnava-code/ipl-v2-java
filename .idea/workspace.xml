@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="90e7e5ae-0f51-4aca-b49a-a8ff01fb89b0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swarnava/ipl/Delivery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swarnava/ipl/Delivery.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/swarnava/ipl/Match.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swarnava/ipl/Match.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/swarnava/ipl/Delivery.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/swarnava/ipl/Delivery.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/swarnava/ipl/Match.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/swarnava/ipl/Match.class" afterDir="false" />
-    </list>
+    <list default="true" id="90e7e5ae-0f51-4aca-b49a-a8ff01fb89b0" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
