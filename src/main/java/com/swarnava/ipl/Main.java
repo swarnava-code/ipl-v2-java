@@ -39,10 +39,10 @@ public class Main {
 
     protected static Map<String, Float> printTheTopEconomicalBowlersForParticularYear(int targetYear){
         Set<Integer> idList = new HashSet<>();
-        Map<String, List<Float>> bowlersOverAndRun = new HashMap<String, List<Float>>();
+        Map<String, List<Integer>> bowlersOverAndRun = new HashMap<String, List<Integer>>();
         Map<String, Float> bowlersEconomy = new TreeMap<>();
         String bowler = "", query;
-        float over, run;
+        int countOver, run;
         int id;
         Statement statement;
         try {
@@ -60,27 +60,28 @@ public class Main {
                 id = idBowlerOverRun.getInt(MATCH_ID);
                 if (idList.contains(id)) {
                     bowler = idBowlerOverRun.getString(BOWLER);
-                    over = Float.parseFloat(idBowlerOverRun.getString(OVER));
-                    run = Float.parseFloat(idBowlerOverRun.getString(TOTAL_RUNS));
+                    countOver = Integer.parseInt(idBowlerOverRun.getString(OVER));
+                    run = Integer.parseInt(idBowlerOverRun.getString(TOTAL_RUNS));
                     if (bowlersOverAndRun.containsKey(bowler)) {
-                        over += bowlersOverAndRun.get(bowler).get(0);
+                        countOver = bowlersOverAndRun.get(bowler).get(0)+1;
                         run += bowlersOverAndRun.get(bowler).get(1);
-                        ArrayList<Float> row = new ArrayList<Float>();
-                        row.add(0, over);
-                        row.add(1, run);
+                        ArrayList<Integer> row = new ArrayList<Integer>();
+                        row.add(0, countOver);//over
+                        row.add(1, run);//run
                         bowlersOverAndRun.put(bowler, row);
                     } else {
-                        List<Float> row = new ArrayList<Float>();
-                        row.add(0, over);
+                        List<Integer> row = new ArrayList<Integer>();
+                        row.add(0, 1);
                         row.add(1, run);
                         bowlersOverAndRun.put(bowler, row);
                     }
                 }
             }
             for (String key : bowlersOverAndRun.keySet()) {
-                bowlersEconomy.put(key, (bowlersOverAndRun.get(key).get(0) / bowlersOverAndRun.get(key).get(1)));
+                float over = bowlersOverAndRun.get(key).get(0) / 6f;
+                bowlersEconomy.put(key, (bowlersOverAndRun.get(key).get(1) / over));
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.print("\n4.) For the year 2015 get the top economical bowlers. :\n"+bowlersEconomy+"\nSize="+bowlersEconomy.size());
