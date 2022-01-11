@@ -84,7 +84,7 @@ class MainTest {
     }
 
     @Test
-    void testTheWinnersWhoWinInACityLeastOneTime(){
+    void testTheWinnersWhoWinInKolkataLeastOneTime(){
         expectedWinnersWhoWinInACityLeastOneTime = Arrays.asList(
                 "Kolkata Knight Riders", "Gujarat Lions","Rising Pune Supergiant","Mumbai Indians","Chennai Super Kings","Rajasthan Royals",
                 "Kings XI Punjab","Kochi Tuskers Kerala","Royal Challengers Bangalore","Delhi Daredevils"
