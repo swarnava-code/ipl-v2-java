@@ -30,12 +30,16 @@ class MainTest {
     }
 
     @Test
-    void testNumberOfMatchesPlayedPerYear(){
+    void testNumberOfMatchesPlayedIn2016(){
         int expectedNoOfMatches2016 = 60;
-        int expectedNoOfMatches2017 = 59;
         int actualNoOfMatches2016 = actualNumberOfMatchesPlayedPerYear.get(2016);
-        int actualNoOfMatches2017 = actualNumberOfMatchesPlayedPerYear.get(2017);
         assertEquals(expectedNoOfMatches2016, actualNoOfMatches2016);
+    }
+
+    @Test
+    void testNumberOfMatchesPlayedIn2017(){
+        int expectedNoOfMatches2017 = 59;
+        int actualNoOfMatches2017 = actualNumberOfMatchesPlayedPerYear.get(2017);
         assertEquals(expectedNoOfMatches2017, actualNoOfMatches2017);
     }
 
