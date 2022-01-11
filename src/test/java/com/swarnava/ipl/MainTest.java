@@ -51,7 +51,24 @@ class MainTest {
 
     @Test
     void testTheTopEconomicalBowlersForParticularYear(){
-        fail("not implemented");
+        double expectedEconomicalRateForRNtenDoeschate =
+                Math.round(((double) 3.4285714305306123)*100d)/100d;
+        double expectedEconomicalRateForJYadav =
+                Math.round(((double) 4.142857142857143)*100d)/100d;
+        double expectedEconomicalRateForVKohli =
+                Math.round(((double) 5.454545455537191)*100d)/100d;
+        double actualEconomicalRateForRNtenDoeschate =
+                (double) Math.round(actualTopEconomicalBowlersForParticularYear.get("RN ten Doeschate")*100)/100;
+        double actualEconomicalRateForJYadav =
+                (double) Math.round(actualTopEconomicalBowlersForParticularYear.get("J Yadav")*100)/100;
+        double actualEconomicalRateForVKohli =
+                (double) Math.round(actualTopEconomicalBowlersForParticularYear.get("V Kohli")*100)/100;
+        assertEquals(expectedEconomicalRateForRNtenDoeschate, actualEconomicalRateForRNtenDoeschate,
+                "Economical Rate For RN ten Doeschate not matched");
+        assertEquals(expectedEconomicalRateForJYadav, actualEconomicalRateForJYadav,
+                "Economical Rate For J Yadav not matched");
+        assertEquals(expectedEconomicalRateForVKohli, actualEconomicalRateForVKohli,
+                "Economical Rate For V Kohli not matched");
     }
 
     @Test
