@@ -50,23 +50,31 @@ class MainTest {
     }
 
     @Test
-    void testTheTopEconomicalBowlersForParticularYear(){
+    void testEconomicalRateForRNtenDoeschate2015(){
         double expectedEconomicalRateForRNtenDoeschate =
                 Math.round(((double) 3.4285714305306123)*100d)/100d;
-        double expectedEconomicalRateForJYadav =
-                Math.round(((double) 4.142857142857143)*100d)/100d;
-        double expectedEconomicalRateForVKohli =
-                Math.round(((double) 5.454545455537191)*100d)/100d;
         double actualEconomicalRateForRNtenDoeschate =
                 (double) Math.round(actualTopEconomicalBowlersForParticularYear.get("RN ten Doeschate")*100)/100;
-        double actualEconomicalRateForJYadav =
-                (double) Math.round(actualTopEconomicalBowlersForParticularYear.get("J Yadav")*100)/100;
-        double actualEconomicalRateForVKohli =
-                (double) Math.round(actualTopEconomicalBowlersForParticularYear.get("V Kohli")*100)/100;
         assertEquals(expectedEconomicalRateForRNtenDoeschate, actualEconomicalRateForRNtenDoeschate,
                 "Economical Rate For RN ten Doeschate not matched");
+    }
+
+    @Test
+    void testEconomicalRateForJYadav2015(){
+        double expectedEconomicalRateForJYadav =
+                Math.round(((double) 4.142857142857143)*100d)/100d;
+        double actualEconomicalRateForJYadav =
+                (double) Math.round(actualTopEconomicalBowlersForParticularYear.get("J Yadav")*100)/100;
         assertEquals(expectedEconomicalRateForJYadav, actualEconomicalRateForJYadav,
                 "Economical Rate For J Yadav not matched");
+    }
+
+    @Test
+    void testEconomicalRateForVKohli2015(){
+        double expectedEconomicalRateForVKohli =
+                Math.round(((double) 5.454545455537191)*100d)/100d;
+        double actualEconomicalRateForVKohli =
+                (double) Math.round(actualTopEconomicalBowlersForParticularYear.get("V Kohli")*100)/100;
         assertEquals(expectedEconomicalRateForVKohli, actualEconomicalRateForVKohli,
                 "Economical Rate For V Kohli not matched");
     }
