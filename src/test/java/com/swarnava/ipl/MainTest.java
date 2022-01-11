@@ -6,7 +6,6 @@ import static com.swarnava.ipl.Main.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MainTest {
-    static Main main = new Main();
     static Map<String, Float> actualTopEconomicalBowlersForParticularYear;
     static Map<Integer, Integer> actualNumberOfMatchesPlayedPerYear;
     static Map<String, Integer> actualNumberOfMatchesWonOfAllTeam;
@@ -16,7 +15,7 @@ class MainTest {
 
     @BeforeAll
     static void init() {
-        if (main.setConnection()) {
+        if (setConnection()) {
             actualNumberOfMatchesPlayedPerYear = printNumberOfMatchesPlayedPerYear();
             actualNumberOfMatchesWonOfAllTeam = printNumberOfMatchesWonOfAllTeam();
             actualExtraRunsConcededPerTeamForParticularYear = printTheExtraRunsConcededPerTeamForParticularYear(2016);
@@ -64,8 +63,17 @@ class MainTest {
     }
 
     @Test
-    void testTheExtraRunsConcededPerTeamForParticularYear(){
-        fail("not implemented");
+    void testTheExtraRunsConcededByKingsXIPunjabFor2016(){
+        int expectedExtraRunsConcededByKingsXIPunjab = 57;
+        int actualExtraRunsConcededByKingsXIPunjab = actualExtraRunsConcededPerTeamForParticularYear.get("Kings XI Punjab");
+        assertEquals(expectedExtraRunsConcededByKingsXIPunjab, actualExtraRunsConcededByKingsXIPunjab, "Extra Runs Conceded By Kings XI Punjab not matched");
+    }
+
+    @Test
+    void testTheExtraRunsConcededByKolkataKnightRidersFor2016(){
+        int expectedExtraRunsConcededByKolkataKnightRiders = 138;
+        int actualExtraRunsConcededByKolkataKnightRiders = actualExtraRunsConcededPerTeamForParticularYear.get("Kolkata Knight Riders");
+        assertEquals(expectedExtraRunsConcededByKolkataKnightRiders, actualExtraRunsConcededByKolkataKnightRiders, "Extra Runs Conceded By Kings XI Punjab not matched");
     }
 
     @Test
