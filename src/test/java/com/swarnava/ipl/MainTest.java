@@ -24,88 +24,82 @@ class MainTest {
         }
     }
 
+    @Tag("IPL")
+    @DisplayName("Testing number of matches played in the year 2016 and 2017")
     @Test
-    void testNumberOfMatchesPlayedIn2016(){
-        int expectedNoOfMatches2016 = 60;
-        int actualNoOfMatches2016 = actualNumberOfMatchesPlayedPerYear.get(2016);
-        assertEquals(expectedNoOfMatches2016, actualNoOfMatches2016, "NumberOfMatchesPlayedIn2016 not matched");
-    }
-
-    @Test
-    void testNumberOfMatchesPlayedIn2017(){
+    void testNumberOfMatchesPlayedInYear(){
         int expectedNoOfMatches2017 = 59;
         int actualNoOfMatches2017 = actualNumberOfMatchesPlayedPerYear.get(2017);
-        assertEquals(expectedNoOfMatches2017, actualNoOfMatches2017, "NumberOfMatchesPlayedIn2017 not matched");
+        int expectedNoOfMatches2016 = 60;
+        int actualNoOfMatches2016 = actualNumberOfMatchesPlayedPerYear.get(2016);
+        assertAll(
+                ()->assertEquals(expectedNoOfMatches2017, actualNoOfMatches2017, "NumberOfMatchesPlayedIn2017 not matched"),
+                ()->assertEquals(expectedNoOfMatches2016, actualNoOfMatches2016, "NumberOfMatchesPlayedIn2016 not matched")
+        );
     }
 
+    @Tag("IPL")
+    @DisplayName("Testing number of matches won by GujaratLions, RoyalChallengersBangalore, KolkataKnightRiders")
     @Test
-    void testNumberOfMatchesWonByKolkataKnightRiders(){
-        int expectedNumberOfMatchesWonByKolkataKnightRiders = 77;
-        int actualNumberOfMatchesWonByKolkataKnightRiders = actualNumberOfMatchesWonOfAllTeam.get("Kolkata Knight Riders");
-        assertEquals(expectedNumberOfMatchesWonByKolkataKnightRiders, actualNumberOfMatchesWonByKolkataKnightRiders,
-                "NumberOfMatchesWonByKolkataKnightRiders not matched");
-    }
-
-    @Test
-    void testNumberOfMatchesWonByRoyalChallengersBangalore(){
-        int expectedNumberOfMatchesWonByRoyalChallengersBangalore = 73;
-        int actualNumberOfMatchesWonByRoyalChallengersBangalore = actualNumberOfMatchesWonOfAllTeam.get("Royal Challengers Bangalore");
-        assertEquals(expectedNumberOfMatchesWonByRoyalChallengersBangalore, actualNumberOfMatchesWonByRoyalChallengersBangalore,
-                "NumberOfMatchesWonByRoyalChallengersBangalore not matched");
-    }
-
-    @Test
-    void testNumberOfMatchesWonByGujaratLions(){
+    void testNumberOfMatchesWonByTeam(){
         int expectedNumberOfMatchesWonByGujaratLions = 13;
         int actualNumberOfMatchesWonBGujaratLions = actualNumberOfMatchesWonOfAllTeam.get("Gujarat Lions");
-        assertEquals(expectedNumberOfMatchesWonByGujaratLions, actualNumberOfMatchesWonBGujaratLions,
-        "NumberOfMatchesWonByGujaratLions not matched");
+        int expectedNumberOfMatchesWonByRoyalChallengersBangalore = 73;
+        int actualNumberOfMatchesWonByRoyalChallengersBangalore = actualNumberOfMatchesWonOfAllTeam.get("Royal Challengers Bangalore");
+        int expectedNumberOfMatchesWonByKolkataKnightRiders = 77;
+        int actualNumberOfMatchesWonByKolkataKnightRiders = actualNumberOfMatchesWonOfAllTeam.get("Kolkata Knight Riders");
+        assertAll(
+                ()->{assertEquals(expectedNumberOfMatchesWonByGujaratLions, actualNumberOfMatchesWonBGujaratLions,
+                "NumberOfMatchesWonByGujaratLions not matched");},
+                ()->{assertEquals(expectedNumberOfMatchesWonByRoyalChallengersBangalore, actualNumberOfMatchesWonByRoyalChallengersBangalore,
+                "NumberOfMatchesWonByRoyalChallengersBangalore not matched");},
+                ()->{assertEquals(expectedNumberOfMatchesWonByKolkataKnightRiders, actualNumberOfMatchesWonByKolkataKnightRiders,
+                "NumberOfMatchesWonByKolkataKnightRiders not matched");}
+        );
     }
 
+    @Tag("IPL")
+    @DisplayName("Testing extra runs conceded by KingsXIPunjab and KolkataKnightRiders for 2016")
     @Test
-    void testTheExtraRunsConcededByKingsXIPunjabFor2016(){
+    void testTheExtraRunsConcededPerTeamFor2016(){
         int expectedExtraRunsConcededByKingsXIPunjab = 57;
         int actualExtraRunsConcededByKingsXIPunjab = actualExtraRunsConcededPerTeamForParticularYear.get("Kings XI Punjab");
-        assertEquals(expectedExtraRunsConcededByKingsXIPunjab, actualExtraRunsConcededByKingsXIPunjab, "Extra Runs Conceded By Kings XI Punjab not matched");
-    }
-
-    @Test
-    void testTheExtraRunsConcededByKolkataKnightRidersFor2016(){
         int expectedExtraRunsConcededByKolkataKnightRiders = 138;
         int actualExtraRunsConcededByKolkataKnightRiders = actualExtraRunsConcededPerTeamForParticularYear.get("Kolkata Knight Riders");
-        assertEquals(expectedExtraRunsConcededByKolkataKnightRiders, actualExtraRunsConcededByKolkataKnightRiders, "Extra Runs Conceded By Kings XI Punjab not matched");
+        assertAll(
+                () -> {assertEquals(expectedExtraRunsConcededByKingsXIPunjab, actualExtraRunsConcededByKingsXIPunjab, "Extra Runs Conceded By Kings XI Punjab not matched");},
+                () -> {assertEquals(expectedExtraRunsConcededByKolkataKnightRiders, actualExtraRunsConcededByKolkataKnightRiders, "Extra Runs Conceded By Kolkata Knight Riders not matched");}
+        );
     }
 
+    @Tag("IPL")
+    @DisplayName("Testing economical rate for the player V Kohli, J Yadav and RN ten Doeschate , year 2015")
     @Test
-    void testEconomicalRateForRNtenDoeschate2015(){
-        double expectedEconomicalRateForRNtenDoeschate =
-                Math.round(((double) 3.4285714305306123)*100d)/100d;
-        double actualEconomicalRateForRNtenDoeschate =
-                (double) Math.round(actualTopEconomicalBowlersForParticularYear.get("RN ten Doeschate")*100)/100;
-        assertEquals(expectedEconomicalRateForRNtenDoeschate, actualEconomicalRateForRNtenDoeschate,
-                "Economical Rate For RN ten Doeschate not matched");
-    }
-
-    @Test
-    void testEconomicalRateForJYadav2015(){
-        double expectedEconomicalRateForJYadav =
-                Math.round(((double) 4.142857142857143)*100d)/100d;
-        double actualEconomicalRateForJYadav =
-                (double) Math.round(actualTopEconomicalBowlersForParticularYear.get("J Yadav")*100)/100;
-        assertEquals(expectedEconomicalRateForJYadav, actualEconomicalRateForJYadav,
-                "Economical Rate For J Yadav not matched");
-    }
-
-    @Test
-    void testEconomicalRateForVKohli2015(){
+    void testEconomicalRate2015(){
         double expectedEconomicalRateForVKohli =
                 Math.round(((double) 5.454545455537191)*100d)/100d;
         double actualEconomicalRateForVKohli =
                 (double) Math.round(actualTopEconomicalBowlersForParticularYear.get("V Kohli")*100)/100;
-        assertEquals(expectedEconomicalRateForVKohli, actualEconomicalRateForVKohli,
-                "Economical Rate For V Kohli not matched");
+        double expectedEconomicalRateForJYadav =
+                Math.round(((double) 4.142857142857143)*100d)/100d;
+        double actualEconomicalRateForJYadav =
+                (double) Math.round(actualTopEconomicalBowlersForParticularYear.get("J Yadav")*100)/100;
+        double expectedEconomicalRateForRNtenDoeschate =
+                Math.round(((double) 3.4285714305306123)*100d)/100d;
+        double actualEconomicalRateForRNtenDoeschate =
+                (double) Math.round(actualTopEconomicalBowlersForParticularYear.get("RN ten Doeschate")*100)/100;
+        assertAll(
+                ()->assertEquals(expectedEconomicalRateForVKohli, actualEconomicalRateForVKohli,
+                        "Economical Rate For V Kohli not matched"),
+                ()->assertEquals(expectedEconomicalRateForJYadav, actualEconomicalRateForJYadav,
+                        "Economical Rate For J Yadav not matched"),
+                ()->assertEquals(expectedEconomicalRateForRNtenDoeschate, actualEconomicalRateForRNtenDoeschate,
+                        "Economical Rate For RN ten Doeschate not matched")
+        );
     }
 
+    @Tag("IPL")
+    @DisplayName("Testing winners who win in Kolkata at least one time")
     @Test
     void testTheWinnersWhoWinInKolkataLeastOneTime(){
         expectedWinnersWhoWinInACityLeastOneTime = Arrays.asList(
