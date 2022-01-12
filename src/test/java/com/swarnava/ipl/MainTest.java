@@ -29,6 +29,25 @@ class MainTest {
                 new TreeSet<>(printTheWinnersWhoWinInACityLeastOneTime(matches, "Kolkata"));
     }
 
+    @DisplayName("Testing matches data")
+    @Test
+    void testMatches(){
+        String expectedTeam = "Kolkata Knight Riders";
+        String expectedTossDecision = "bat";
+        String actualTeam = matchesData(PATH_MATCHES).get(2).getTeam2();
+        String actualTossDecision = matchesData(PATH_MATCHES).get(4).getTossDecision();
+        int expectedSize = 636;
+        int actualSize = matchesData(PATH_MATCHES).size();
+        assertAll(
+                ()->assertEquals(expectedTeam, actualTeam,
+                        "expectedTeam not matched"),
+                ()->assertEquals(expectedTossDecision, actualTossDecision,
+                        "expectedTossDecision not matched"),
+                ()->assertEquals(expectedSize, actualSize,
+                        "size not matched")
+        );
+    }
+
     @DisplayName("Testing number of matches played in the year 2016 and 2017")
     @Test
     void testNumberOfMatchesPlayedInYear(){
