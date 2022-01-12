@@ -29,6 +29,25 @@ class MainTest {
                 new TreeSet<>(printTheWinnersWhoWinInACityLeastOneTime(matches, "Kolkata"));
     }
 
+    @DisplayName("Testing deliveries data")
+    @Test
+    void testDeliveries(){
+        int expectedBall = 1;
+        int actualBall = deliveriesData(PATH_DELIVERY).get(150454).getBall();
+        String expectedBatsMan = "Sachin Baby";
+        String actualBatsMan = deliveriesData(PATH_DELIVERY).get(150455).getBatsMan();
+        int expectedSize = 150460;
+        int actualSize = deliveriesData(PATH_DELIVERY).size();
+        assertAll(
+                ()->assertEquals(expectedBatsMan, actualBatsMan,
+                        "expectedBatsMan not matched"),
+                ()->assertEquals(expectedBall, actualBall,
+                        "expectedBall not matched"),
+                ()->assertEquals(expectedSize, actualSize,
+                        "expectedSize not matched")
+        );
+    }
+
     @DisplayName("Testing matches data")
     @Test
     void testMatches(){
