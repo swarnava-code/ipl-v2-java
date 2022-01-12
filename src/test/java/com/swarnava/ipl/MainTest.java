@@ -24,7 +24,6 @@ class MainTest {
         }
     }
 
-    @Tag("IPL")
     @DisplayName("Testing number of matches played in the year 2016 and 2017")
     @Test
     void testNumberOfMatchesPlayedInYear(){
@@ -33,12 +32,13 @@ class MainTest {
         int expectedNoOfMatches2016 = 60;
         int actualNoOfMatches2016 = actualNumberOfMatchesPlayedPerYear.get(2016);
         assertAll(
-                ()->assertEquals(expectedNoOfMatches2017, actualNoOfMatches2017, "NumberOfMatchesPlayedIn2017 not matched"),
-                ()->assertEquals(expectedNoOfMatches2016, actualNoOfMatches2016, "NumberOfMatchesPlayedIn2016 not matched")
+                ()->assertEquals(expectedNoOfMatches2017, actualNoOfMatches2017,
+                        "NumberOfMatchesPlayedIn2017 not matched"),
+                ()->assertEquals(expectedNoOfMatches2016, actualNoOfMatches2016,
+                        "NumberOfMatchesPlayedIn2016 not matched")
         );
     }
 
-    @Tag("IPL")
     @DisplayName("Testing number of matches won by GujaratLions, RoyalChallengersBangalore, KolkataKnightRiders")
     @Test
     void testNumberOfMatchesWonByTeam(){
@@ -58,7 +58,6 @@ class MainTest {
         );
     }
 
-    @Tag("IPL")
     @DisplayName("Testing extra runs conceded by KingsXIPunjab and KolkataKnightRiders for 2016")
     @Test
     void testTheExtraRunsConcededPerTeamFor2016(){
@@ -72,7 +71,6 @@ class MainTest {
         );
     }
 
-    @Tag("IPL")
     @DisplayName("Testing economical rate for the player V Kohli, J Yadav and RN ten Doeschate , year 2015")
     @Test
     void testEconomicalRate2015(){
@@ -98,7 +96,6 @@ class MainTest {
         );
     }
 
-    @Tag("IPL")
     @DisplayName("Testing winners who win in Kolkata at least one time")
     @Test
     void testTheWinnersWhoWinInKolkataLeastOneTime(){
