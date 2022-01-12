@@ -21,9 +21,12 @@ class MainTest {
         List<Delivery> deliveries = deliveriesData(PATH_DELIVERY);
         actualNumberOfMatchesPlayedPerYear = printNumberOfMatchesPlayedPerYear(matches);
         actualNumberOfMatchesWonOfAllTeam = printNumberOfMatchesWonOfAllTeam(matches);
-        actualExtraRunsConcededPerTeamForParticularYear = printTheExtraRunsConcededPerTeamForParticularYear(matches, deliveries, 2016);
-        actualTopEconomicalBowlersForParticularYear = printTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
-        actualWinnersWhoWinInACityLeastOneTime = new TreeSet<>(printTheWinnersWhoWinInACityLeastOneTime(matches, "Kolkata"));
+        actualExtraRunsConcededPerTeamForParticularYear =
+                printTheExtraRunsConcededPerTeamForParticularYear(matches, deliveries, 2016);
+        actualTopEconomicalBowlersForParticularYear =
+                printTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
+        actualWinnersWhoWinInACityLeastOneTime =
+                new TreeSet<>(printTheWinnersWhoWinInACityLeastOneTime(matches, "Kolkata"));
     }
 
     @DisplayName("Testing number of matches played in the year 2016 and 2017")
@@ -47,16 +50,21 @@ class MainTest {
         int expectedNumberOfMatchesWonByGujaratLions = 13;
         int actualNumberOfMatchesWonBGujaratLions = actualNumberOfMatchesWonOfAllTeam.get("Gujarat Lions");
         int expectedNumberOfMatchesWonByRoyalChallengersBangalore = 73;
-        int actualNumberOfMatchesWonByRoyalChallengersBangalore = actualNumberOfMatchesWonOfAllTeam.get("Royal Challengers Bangalore");
+        int actualNumberOfMatchesWonByRoyalChallengersBangalore =
+                actualNumberOfMatchesWonOfAllTeam.get("Royal Challengers Bangalore");
         int expectedNumberOfMatchesWonByKolkataKnightRiders = 77;
-        int actualNumberOfMatchesWonByKolkataKnightRiders = actualNumberOfMatchesWonOfAllTeam.get("Kolkata Knight Riders");
+        int actualNumberOfMatchesWonByKolkataKnightRiders =
+                actualNumberOfMatchesWonOfAllTeam.get("Kolkata Knight Riders");
         assertAll(
-                ()->{assertEquals(expectedNumberOfMatchesWonByGujaratLions, actualNumberOfMatchesWonBGujaratLions,
-                "NumberOfMatchesWonByGujaratLions not matched");},
-                ()->{assertEquals(expectedNumberOfMatchesWonByRoyalChallengersBangalore, actualNumberOfMatchesWonByRoyalChallengersBangalore,
-                "NumberOfMatchesWonByRoyalChallengersBangalore not matched");},
-                ()->{assertEquals(expectedNumberOfMatchesWonByKolkataKnightRiders, actualNumberOfMatchesWonByKolkataKnightRiders,
-                "NumberOfMatchesWonByKolkataKnightRiders not matched");}
+                ()->assertEquals(expectedNumberOfMatchesWonByGujaratLions,
+                        actualNumberOfMatchesWonBGujaratLions,
+                "NumberOfMatchesWonByGujaratLions not matched"),
+                ()->assertEquals(expectedNumberOfMatchesWonByRoyalChallengersBangalore,
+                        actualNumberOfMatchesWonByRoyalChallengersBangalore,
+                "NumberOfMatchesWonByRoyalChallengersBangalore not matched"),
+                ()->assertEquals(expectedNumberOfMatchesWonByKolkataKnightRiders,
+                        actualNumberOfMatchesWonByKolkataKnightRiders,
+                "NumberOfMatchesWonByKolkataKnightRiders not matched")
         );
     }
 
@@ -64,12 +72,18 @@ class MainTest {
     @Test
     void testTheExtraRunsConcededPerTeamFor2016(){
         int expectedExtraRunsConcededByKingsXIPunjab = 57;
-        int actualExtraRunsConcededByKingsXIPunjab = actualExtraRunsConcededPerTeamForParticularYear.get("Kings XI Punjab");
+        int actualExtraRunsConcededByKingsXIPunjab =
+                actualExtraRunsConcededPerTeamForParticularYear.get("Kings XI Punjab");
         int expectedExtraRunsConcededByKolkataKnightRiders = 138;
-        int actualExtraRunsConcededByKolkataKnightRiders = actualExtraRunsConcededPerTeamForParticularYear.get("Kolkata Knight Riders");
+        int actualExtraRunsConcededByKolkataKnightRiders =
+                actualExtraRunsConcededPerTeamForParticularYear.get("Kolkata Knight Riders");
         assertAll(
-                () -> {assertEquals(expectedExtraRunsConcededByKingsXIPunjab, actualExtraRunsConcededByKingsXIPunjab, "Extra Runs Conceded By Kings XI Punjab not matched");},
-                () -> {assertEquals(expectedExtraRunsConcededByKolkataKnightRiders, actualExtraRunsConcededByKolkataKnightRiders, "Extra Runs Conceded By Kolkata Knight Riders not matched");}
+                () -> assertEquals(expectedExtraRunsConcededByKingsXIPunjab,
+                        actualExtraRunsConcededByKingsXIPunjab,
+                        "Extra Runs Conceded By Kings XI Punjab not matched"),
+                () -> assertEquals(expectedExtraRunsConcededByKolkataKnightRiders,
+                        actualExtraRunsConcededByKolkataKnightRiders,
+                        "Extra Runs Conceded By Kolkata Knight Riders not matched")
         );
     }
 
@@ -102,8 +116,9 @@ class MainTest {
     @Test
     void testTheWinnersWhoWinInKolkataLeastOneTime(){
         expectedWinnersWhoWinInACityLeastOneTime = Arrays.asList(
-                "Kolkata Knight Riders", "Gujarat Lions","Rising Pune Supergiant","Mumbai Indians", "Chennai Super Kings",
-                "Rajasthan Royals", "Kings XI Punjab","Kochi Tuskers Kerala","Royal Challengers Bangalore","Delhi Daredevils"
+                "Kolkata Knight Riders", "Gujarat Lions","Rising Pune Supergiant","Mumbai Indians",
+                "Chennai Super Kings", "Rajasthan Royals", "Kings XI Punjab","Kochi Tuskers Kerala",
+                "Royal Challengers Bangalore","Delhi Daredevils"
         );
         Collections.sort(expectedWinnersWhoWinInACityLeastOneTime);
         assertIterableEquals(
