@@ -6,6 +6,8 @@ import static com.swarnava.ipl.Main.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MainTest {
+    private static final String PATH_MATCHES = "csv/matches.csv";
+    private static final String PATH_DELIVERY = "csv/deliveries.csv";
     static Map<String, Float> actualTopEconomicalBowlersForParticularYear;
     static Map<Integer, Integer> actualNumberOfMatchesPlayedPerYear;
     static Map<String, Integer> actualNumberOfMatchesWonOfAllTeam;
@@ -15,13 +17,13 @@ class MainTest {
 
     @BeforeAll
     static void init() {
-        if (setConnection()) {
-            actualNumberOfMatchesPlayedPerYear = printNumberOfMatchesPlayedPerYear();
-            actualNumberOfMatchesWonOfAllTeam = printNumberOfMatchesWonOfAllTeam();
-            actualExtraRunsConcededPerTeamForParticularYear = printTheExtraRunsConcededPerTeamForParticularYear(2016);
-            actualTopEconomicalBowlersForParticularYear = printTheTopEconomicalBowlersForParticularYear(2015);
-            actualWinnersWhoWinInACityLeastOneTime = new TreeSet<>(printTheWinnersWhoWinInACityLeastOneTime("Kolkata"));
-        }
+        List<Match> matches = matchesData(PATH_MATCHES);
+        List<Delivery> deliveries = deliveriesData(PATH_DELIVERY);
+        actualNumberOfMatchesPlayedPerYear = printNumberOfMatchesPlayedPerYear(matches);
+        actualNumberOfMatchesWonOfAllTeam = printNumberOfMatchesWonOfAllTeam(matches);
+        actualExtraRunsConcededPerTeamForParticularYear = printTheExtraRunsConcededPerTeamForParticularYear(matches, deliveries, 2016);
+        actualTopEconomicalBowlersForParticularYear = printTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
+        actualWinnersWhoWinInACityLeastOneTime = new TreeSet<>(printTheWinnersWhoWinInACityLeastOneTime(matches, "Kolkata"));
     }
 
     @DisplayName("Testing number of matches played in the year 2016 and 2017")

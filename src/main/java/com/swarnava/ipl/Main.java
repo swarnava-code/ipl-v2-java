@@ -1,187 +1,255 @@
 package com.swarnava.ipl;
 
-import java.sql.*;
+import java.io.File;
 import java.util.*;
 
 public class Main {
-    public static final int MATCH_ID = 1;
-    public static final int BOWLER = 9;
-    public static final int OVER = 5;
-    private static final int TOTAL_RUNS = 18;
-    static Connection connection = null;
-    static final String DATABASE_NAME = "new_schema1";
-    static final String URL = "jdbc:mysql://localhost:3306/"+ DATABASE_NAME;
-    static final String TABLE_MATCH = "matches";
-    static final String TABLE_DELIVERY = "deliveries2";
-    static final String USER_NAME = "swarnava";
-    static final String PASSWORD = "12345";
-    static final int VIEW_COL1 = 1, VIEW_COL2 = 2, VIEW_COL3 = 3, VIEW_COL4 = 4;
+    private static final String PATH_MATCHES = "csv/matches.csv";
+    private static final String PATH_DELIVERY = "csv/deliveries.csv";
+    private static final int ID = 0;
+    private static final int SEASON = 1;
+    private static final int CITY = 2;
+    private static final int DATE = 3;
+    private static final int TEAM1 = 4;
+    private static final int TEAM2 = 5;
+    private static final int TOSS_WINNER = 6;
+    private static final int TOSS_DECISION = 7;
+    private static final int RESULT = 8;
+    private static final int DL_APPLIED = 9;
+    private static final int WINNER = 10;
+    private static final int WIN_BY_RUNS = 11;
+    private static final int WIN_BY_WICKETS = 12;
+    private static final int PLAYER_OF_MATCH = 13;
+    private static final int VENUE = 14;
+    private static final int UMPIRE1 = 15;
+    private static final int UMPIRE2 = 16;
+    private static final int UMPIRE3 = 17;
+    private static final int MATCH_ID = 0;
+    private static final int INNING = 1;
+    private static final int BATTING_TEAM = 2;
+    private static final int BOWLING_TEAM = 3;
+    private static final int OVER = 4;
+    private static final int BALL = 5;
+    private static final int BATSMAN = 6;
+    private static final int NON_STRIKER = 7;
+    private static final int BOWLER = 8;
+    private static final int IS_SUPER_OVER = 9;
+    private static final int WIDE_RUNS = 10;
+    private static final int BYE_RUNS = 11;
+    private static final int LEGBYE_RUNS = 12;
+    private static final int NOBALL_RUNS = 13;
+    private static final int PENALTY_RUNS = 14;
+    private static final int BATSMAN_RUNS = 15;
+    private static final int EXTRA_RUNS = 16;
+    private static final int TOTAL_RUNS = 17;
+    private static final int PLAYER_DISMISSED = 18;
+    private static final int DISMISSAL_KIND = 19;
+    private static final int FIELDER = 20;
 
-    public static void main(String[] args)   {
-        if (setConnection()) {
-            printNumberOfMatchesPlayedPerYear();
-            printNumberOfMatchesWonOfAllTeam();
-            printTheExtraRunsConcededPerTeamForParticularYear(2016);
-            printTheTopEconomicalBowlersForParticularYear(2015);
-            printTheWinnersWhoWinInACityLeastOneTime("Kolkata");
-        }
+    public static void main(String[] args) {
+        List<Match> matches = matchesData(PATH_MATCHES);
+        List<Delivery> deliveries = deliveriesData(PATH_DELIVERY);
+        printNumberOfMatchesPlayedPerYear(matches);
+        printNumberOfMatchesWonOfAllTeam(matches);
+        printTheExtraRunsConcededPerTeamForParticularYear(matches, deliveries, 2016);
+        printTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
+        printTheWinnersWhoWinInACityLeastOneTime(matches, "Kolkata");
     }
 
-    protected static boolean setConnection(){
+    protected static List<Match> matchesData(String PATH_MATCHES) {
+        List<Match> matchList = new ArrayList<Match>();
         try {
-            connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    protected static Map<String, Float> printTheTopEconomicalBowlersForParticularYear(int targetYear){
-        Set<Integer> idList = new HashSet<>();
-        Map<String, List<Integer>> bowlersOverAndRun = new HashMap<String, List<Integer>>();
-        Map<String, Float> bowlersEconomy = new TreeMap<>();
-        String bowler = "", query;
-        int countOver, run;
-        int id;
-        Statement statement;
-        try {
-            statement = connection.createStatement();
-            query = "Select id from "+TABLE_MATCH+" Where season = '"+targetYear+"'";
-            ResultSet idSet = statement.executeQuery(query);
-            while (idSet.next()) {
-                idList.add(Integer.parseInt(idSet.getString(VIEW_COL1)));
+            Match match;
+            String line;
+            Scanner sc = new Scanner(new File(PATH_MATCHES));
+            sc.useDelimiter("\n");
+            sc.next(); // to eliminate heading text, ignore NumberFormatException
+            while (sc.hasNext()) {
+                line = sc.next();
+                String values[] = line.split(",");
+                match = new Match();
+                match.setId(Integer.parseInt(values[ID]));
+                match.setSeason(Integer.parseInt(values[SEASON]));
+                match.setCity(values[CITY]);
+                match.setDate(values[DATE]);
+                match.setTeam1(values[TEAM1]);
+                match.setTeam2(values[TEAM2]);
+                match.setTossWinner(values[TOSS_WINNER]);
+                match.setTossDecision(values[TOSS_DECISION]);
+                match.setResult(values[RESULT]);
+                match.setDlApplied(Integer.parseInt(values[DL_APPLIED]));
+                match.setWinner(values[WINNER]);
+                match.setWinByRuns(Integer.parseInt(values[WIN_BY_RUNS]));
+                match.setWinByWickets(Integer.parseInt(values[WIN_BY_WICKETS]));
+                match.setPlayerOfMatch(values[PLAYER_OF_MATCH]);
+                match.setVenue(values[VENUE]);
+                match.setUmpire1(values[UMPIRE1]);
+                match.setUmpire2(values[UMPIRE2]);
+                match.setUmpire3(values[UMPIRE3]);
+                matchList.add(match);
             }
-            String idListStr = idList.toString();
-            idListStr = idListStr.substring(1,idListStr.length()-1);
-            query = "Select * from "+TABLE_DELIVERY+" where match_id in("+idListStr+") ";
-            ResultSet idBowlerOverRun = statement.executeQuery(query);
-            while (idBowlerOverRun.next()) {
-                id = idBowlerOverRun.getInt(MATCH_ID);
-                if (idList.contains(id)) {
-                    bowler = idBowlerOverRun.getString(BOWLER);
-                    countOver = Integer.parseInt(idBowlerOverRun.getString(OVER));
-                    run = Integer.parseInt(idBowlerOverRun.getString(TOTAL_RUNS));
-                    if (bowlersOverAndRun.containsKey(bowler)) {
-                        countOver = bowlersOverAndRun.get(bowler).get(0)+1;
-                        run += bowlersOverAndRun.get(bowler).get(1);
-                        ArrayList<Integer> row = new ArrayList<Integer>();
-                        row.add(0, countOver);//over
-                        row.add(1, run);//run
-                        bowlersOverAndRun.put(bowler, row);
-                    } else {
-                        List<Integer> row = new ArrayList<Integer>();
-                        row.add(0, 1);
-                        row.add(1, run);
-                        bowlersOverAndRun.put(bowler, row);
-                    }
-                }
-            }
-            for (String key : bowlersOverAndRun.keySet()) {
-                float over = bowlersOverAndRun.get(key).get(0) / 6f;
-                bowlersEconomy.put(key, (bowlersOverAndRun.get(key).get(1) / over));
-            }
+            sc.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.print("\n4.) For the year 2015 get the top economical bowlers. :\n"+bowlersEconomy+"\nSize="+bowlersEconomy.size());
+        return matchList;
+    }
+
+    protected static List<Delivery> deliveriesData(String PATH_DELIVERY) {
+        List<Delivery> deliveryList = new ArrayList<Delivery>();
+        try {
+            Delivery delivery;
+            String line;
+            Scanner sc = new Scanner(new File(PATH_DELIVERY));
+            sc.useDelimiter("\n");
+            sc.next(); // to eliminate head txt, otherwise NumberFormatException happen
+            while (sc.hasNext()) {
+                line = sc.next();
+                String values[] = line.split(",");
+                delivery = new Delivery();
+                delivery.setMatchId(Integer.parseInt(values[MATCH_ID]));
+                delivery.setInning(Integer.parseInt(values[INNING]));
+                delivery.setBattingTeam(values[BATTING_TEAM]);
+                delivery.setBowlingTeam(values[BOWLING_TEAM]);
+                delivery.setOver(Integer.parseInt(values[OVER]));
+                delivery.setBall(Integer.parseInt(values[BALL]));
+                delivery.setBatsMan(values[BATSMAN]);
+                delivery.setNonStriker(values[NON_STRIKER]);
+                delivery.setBowler(values[BOWLER]);
+                delivery.setIsSuperOver(Integer.parseInt(values[IS_SUPER_OVER]));
+                delivery.setWideRuns(Integer.parseInt(values[WIDE_RUNS]));
+                delivery.setByeRuns(Integer.parseInt(values[BYE_RUNS]));
+                delivery.setLegByeRuns(Integer.parseInt(values[LEGBYE_RUNS]));
+                delivery.setNoBallRuns(Integer.parseInt(values[NOBALL_RUNS]));
+                delivery.setPenaltyRuns(Integer.parseInt(values[PENALTY_RUNS]));
+                delivery.setBatsmanRuns(Integer.parseInt(values[BATSMAN_RUNS]));
+                delivery.setExtraRuns(Integer.parseInt(values[EXTRA_RUNS]));
+                delivery.setTotalRuns(Integer.parseInt(values[TOTAL_RUNS]));
+                delivery.setPlayerDismissed(values[PLAYER_DISMISSED]);
+                delivery.setDismissalKind(values[DISMISSAL_KIND]);
+                delivery.setFielder(values[FIELDER]);
+                deliveryList.add(delivery);
+            }
+            sc.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return deliveryList;
+    }
+
+    protected static Map<String, Float> printTheTopEconomicalBowlersForParticularYear(
+            List<Match> matches, List<Delivery> deliveries, int targetYear) {
+        Set<Integer> IdList = new HashSet<>();
+        Map<String, List<Integer>> bowlersOverAndRun = new HashMap<String, List<Integer>>();
+        Map<String, Float> bowlersEconomy = new TreeMap<>();
+        String bowler = "";
+        int countOver, run;
+        int year, id;
+        for (Match match : matches) {
+            year = match.getSeason();
+            if (year == targetYear) {
+                IdList.add(match.getId());
+            }
+        }
+        for (Delivery delivery : deliveries) {
+            id = delivery.getMatchId();
+            if (IdList.contains(id)) {
+                bowler = delivery.getBowler();
+                run = delivery.getTotalRuns();
+                if (bowlersOverAndRun.containsKey(bowler)) {
+                    countOver = bowlersOverAndRun.get(bowler).get(0) + 1;
+                    run += bowlersOverAndRun.get(bowler).get(1);
+                    ArrayList<Integer> row = new ArrayList<Integer>();
+                    row.add(0, countOver);
+                    row.add(1, run);
+                    bowlersOverAndRun.put(bowler, row);
+                } else {
+                    List<Integer> row = new ArrayList<Integer>();
+                    row.add(0, 1);
+                    row.add(1, run);
+                    bowlersOverAndRun.put(bowler, row);
+                }
+            }
+        }
+        for (String key : bowlersOverAndRun.keySet()) {
+            float over = bowlersOverAndRun.get(key).get(0) / 6f;
+            bowlersEconomy.put(key, (bowlersOverAndRun.get(key).get(1) / over));
+        }
+        System.out.print("\n4.) For the year 2015 get the top economical bowlers. :\n" +
+                bowlersEconomy + "\nSize=" + bowlersEconomy.size());
         return bowlersEconomy;
     }
 
-    protected static Map<Integer, Integer> printNumberOfMatchesPlayedPerYear(){
+    protected static Map<Integer, Integer> printNumberOfMatchesPlayedPerYear(List<Match> matches) {
         Map<Integer, Integer> countNoOfMatchPerYear = new TreeMap<>();
-        int season = 0, countNoOfMatch = 0;
-        String query = "SELECT season, count(winner) FROM matches group by season;";;
-        try(
-                Statement statement = connection.createStatement();
-                ResultSet countWinnerGroupBySeason = statement.executeQuery(query);
-        ) {
-            while (countWinnerGroupBySeason.next()) {
-                season = Integer.parseInt(countWinnerGroupBySeason.getString(VIEW_COL1));
-                countNoOfMatch = Integer.parseInt(countWinnerGroupBySeason.getString(VIEW_COL2));
-                countNoOfMatchPerYear.put(season, countNoOfMatch);
+        int year;
+        for (Match match : matches) {
+            year = match.getSeason();
+            if (countNoOfMatchPerYear.containsKey(year)) {
+                countNoOfMatchPerYear.put(year, countNoOfMatchPerYear.get(year) + 1);
+            } else {
+                countNoOfMatchPerYear.put(year, 1);
             }
-        } catch (Exception e){
-            e.printStackTrace();
         }
-        System.out.println(" \n\n1.) print Number Of Matches Played Per Year : \n"+countNoOfMatchPerYear);
+        System.out.println(" \n\n1.) print Number Of Matches Played Per Year : \n" + countNoOfMatchPerYear);
         return countNoOfMatchPerYear;
     }
 
-    protected static Map<String, Integer> printNumberOfMatchesWonOfAllTeam(){
-        Map<String, Integer> trackNoOfMatchesWinByTeam = new HashMap<String, Integer>();
+    protected static Map<String, Integer> printNumberOfMatchesWonOfAllTeam(List<Match> matches) {
+        HashMap<String, Integer> trackNoOfMatchesWinByTeam = new HashMap<String, Integer>();
         String winner = "";
-        int count = 0;
-        String query = "SELECT winner, count(winner) FROM matches group by winner ;";
-        try(
-                Statement statement = connection.createStatement();
-                ResultSet winnerCountList = statement.executeQuery(query);
-        ){
-            while (winnerCountList.next()) {
-                winner = winnerCountList.getString(VIEW_COL1);
-                count = Integer.parseInt(winnerCountList.getString(VIEW_COL2));
-                trackNoOfMatchesWinByTeam.put(winner, count);
+        for (Match match : matches) {
+            winner = match.getWinner();
+            if (trackNoOfMatchesWinByTeam.containsKey(winner)) {
+                trackNoOfMatchesWinByTeam.put(winner, trackNoOfMatchesWinByTeam.get(winner) + 1);
+            } else {
+                trackNoOfMatchesWinByTeam.put(winner, 1);
             }
-        }catch (Exception e){
-            e.printStackTrace();
         }
         trackNoOfMatchesWinByTeam.remove("");
         System.out.println(
                 "\n2.) Number of matches won of all teams over all the years of IPL. : \n"
-                        +trackNoOfMatchesWinByTeam);
+                        + trackNoOfMatchesWinByTeam);
         return trackNoOfMatchesWinByTeam;
     }
 
-    protected static Map<String, Integer> printTheExtraRunsConcededPerTeamForParticularYear(int targetYear){
+    protected static Map<String, Integer>
+    printTheExtraRunsConcededPerTeamForParticularYear(List<Match> matches, List<Delivery> deliveries, int targetYear) {
         Map<Integer, String> listOfIdAndWinner = new HashMap<Integer, String>();
-        Map<String, Integer> trackExtraRun = new HashMap<String, Integer>();
-        String winner = "", query = "SELECT id, winner FROM "+TABLE_MATCH+" where season = '"+targetYear+"';";
-        int countExtraRun = 0, extraRun = 0, matchId, season;
-        try{
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);//"SELECT id,season,winner FROM "+ TABLE_MATCH
-            while (resultSet.next()) {
-                season = Integer.parseInt(resultSet.getString(VIEW_COL1));
-                winner = resultSet.getString(VIEW_COL2);
-                listOfIdAndWinner.put (season, winner);
+        Map<String, Integer> trackExtraRun = new HashMap<String, Integer>();    //for question 3
+        String winner = "";
+        int countExtraRun = 0, extraRun = 0, matchId;
+        for (Match match : matches) {
+            if (match.getSeason() == targetYear) {
+                listOfIdAndWinner.put(match.getId(), match.getWinner());
             }
-            query = "SELECT match_id, extra_runs FROM "+ TABLE_DELIVERY;
-            resultSet = statement.executeQuery(query);
-            boolean v = resultSet.next();
-            while (v) {
-                matchId = Integer.parseInt(resultSet.getString(VIEW_COL1));
-                if ( listOfIdAndWinner.containsKey(matchId) ) {
-                    winner = listOfIdAndWinner.get(matchId);
-                    extraRun = Integer.parseInt(resultSet.getString(VIEW_COL2));
-                    if(trackExtraRun.containsKey(winner)){
-                        trackExtraRun.put(winner, trackExtraRun.get(winner)+extraRun);
-                    }else{
-                        trackExtraRun.put(winner, extraRun);
-                    }
-                    countExtraRun += extraRun;
-                }
-                v=resultSet.next();
-            }
-        }catch (Exception e){
-            e.printStackTrace();
         }
-        System.out.println("\n3.) For the year "+targetYear+" get the extra runs conceded per team. : \n"+trackExtraRun
-                +"\n Total extra run make by all team for the year "+targetYear+" : "+ countExtraRun);
+        for (Delivery delivery : deliveries) {
+            matchId = delivery.getMatchId();
+            if (listOfIdAndWinner.containsKey(matchId)) {
+                winner = listOfIdAndWinner.get(matchId);
+                extraRun = delivery.getExtraRuns();
+                if (trackExtraRun.containsKey(winner)) {
+                    trackExtraRun.put(winner, trackExtraRun.get(winner) + extraRun);
+                } else {
+                    trackExtraRun.put(winner, extraRun);
+                }
+                countExtraRun += extraRun;
+            }
+        }
+        System.out.println("\n3.) For the year " + targetYear +
+                " get the extra runs conceded per team. : \n" + trackExtraRun
+                + "\n Total extra run make by all team for the year " + targetYear + " : " + countExtraRun);
         return trackExtraRun;
     }
 
-    protected static Set<String> printTheWinnersWhoWinInACityLeastOneTime(String targetCity){
-        Set<String> winners = new HashSet<String>() ;
-        System.out.println("\n\n5.) Winners who win in the city: "+targetCity);
-        String query = "SELECT distinct winner from "+ TABLE_MATCH +" where city = '"+targetCity+"';";
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet winnerSet = statement.executeQuery(query);
-            while (winnerSet.next()) {
-                winners.add(winnerSet.getString(VIEW_COL1));
+    protected static Set<String> printTheWinnersWhoWinInACityLeastOneTime(List<Match> matches, String targetCity) {
+        Set<String> winners = new HashSet<String>();
+        System.out.println("\n\n5.) Winners who win in the city: " + targetCity);
+        for (Match match : matches) {
+            if (match.getCity().equals(targetCity)) {
+                winners.add(match.getWinner());
             }
-        }catch (Exception e){
-            e.printStackTrace();
         }
         System.out.print(winners);
         return winners;
