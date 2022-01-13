@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.*;
 
 public class Main {
-    private static final String PATH_MATCHES = "csv/matches.csv";
-    private static final String PATH_DELIVERY = "csv/deliveries.csv";
     private static final int ID = 0;
     private static final int SEASON = 1;
     private static final int CITY = 2;
@@ -47,8 +45,8 @@ public class Main {
     private static final int FIELDER = 20;
 
     public static void main(String[] args) {
-        List<Match> matches = matchesData(PATH_MATCHES);
-        List<Delivery> deliveries = deliveriesData(PATH_DELIVERY);
+        List<Match> matches = matchesData("dataset/matches.csv");
+        List<Delivery> deliveries = deliveriesData("dataset/deliveries.csv");
         printNumberOfMatchesPlayedPerYear(matches);
         printNumberOfMatchesWonOfAllTeam(matches);
         printTheExtraRunsConcededPerTeamForParticularYear(matches, deliveries, 2016);

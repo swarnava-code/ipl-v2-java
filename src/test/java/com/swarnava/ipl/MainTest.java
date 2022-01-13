@@ -6,8 +6,6 @@ import static com.swarnava.ipl.Main.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MainTest {
-    private static final String PATH_MATCHES = "csv/matches.csv";
-    private static final String PATH_DELIVERY = "csv/deliveries.csv";
     static Map<String, Float> actualTopEconomicalBowlersForParticularYear;
     static Map<Integer, Integer> actualNumberOfMatchesPlayedPerYear;
     static Map<String, Integer> actualNumberOfMatchesWonOfAllTeam;
@@ -17,8 +15,8 @@ class MainTest {
 
     @BeforeAll
     static void init() {
-        List<Match> matches = matchesData(PATH_MATCHES);
-        List<Delivery> deliveries = deliveriesData(PATH_DELIVERY);
+        List<Match> matches = matchesData("dataset/matches.csv");
+        List<Delivery> deliveries = deliveriesData("dataset/deliveries.csv");
         actualNumberOfMatchesPlayedPerYear = printNumberOfMatchesPlayedPerYear(matches);
         actualNumberOfMatchesWonOfAllTeam = printNumberOfMatchesWonOfAllTeam(matches);
         actualExtraRunsConcededPerTeamForParticularYear =
@@ -31,13 +29,13 @@ class MainTest {
 
     @DisplayName("Testing deliveries data")
     @Test
-    void testDeliveries(){
+    void testDeliveriesData(){
         int expectedBall = 1;
-        int actualBall = deliveriesData(PATH_DELIVERY).get(150454).getBall();
+        int actualBall = deliveriesData("dataset/deliveries.csv").get(150454).getBall();
         String expectedBatsMan = "Sachin Baby";
-        String actualBatsMan = deliveriesData(PATH_DELIVERY).get(150455).getBatsMan();
+        String actualBatsMan = deliveriesData("dataset/deliveries.csv").get(150455).getBatsMan();
         int expectedSize = 150460;
-        int actualSize = deliveriesData(PATH_DELIVERY).size();
+        int actualSize = deliveriesData("dataset/deliveries.csv").size();
         assertAll(
                 ()->assertEquals(expectedBatsMan, actualBatsMan,
                         "expectedBatsMan not matched"),
@@ -50,13 +48,13 @@ class MainTest {
 
     @DisplayName("Testing matches data")
     @Test
-    void testMatches(){
+    void testMatchesData(){
         String expectedTeam = "Kolkata Knight Riders";
         String expectedTossDecision = "bat";
-        String actualTeam = matchesData(PATH_MATCHES).get(2).getTeam2();
-        String actualTossDecision = matchesData(PATH_MATCHES).get(4).getTossDecision();
+        String actualTeam = matchesData("dataset/matches.csv").get(2).getTeam2();
+        String actualTossDecision = matchesData("dataset/matches.csv").get(4).getTossDecision();
         int expectedSize = 636;
-        int actualSize = matchesData(PATH_MATCHES).size();
+        int actualSize = matchesData("dataset/matches.csv").size();
         assertAll(
                 ()->assertEquals(expectedTeam, actualTeam,
                         "expectedTeam not matched"),
