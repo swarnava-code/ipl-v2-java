@@ -63,7 +63,7 @@ public class Main {
             String line;
             Scanner sc = new Scanner(new File(PATH_MATCHES));
             sc.useDelimiter("\n");
-            sc.next(); // to eliminate heading text, ignore NumberFormatException
+            sc.next();
             while (sc.hasNext()) {
                 line = sc.next();
                 String values[] = line.split(",");
@@ -102,7 +102,7 @@ public class Main {
             String line;
             Scanner sc = new Scanner(new File(PATH_DELIVERY));
             sc.useDelimiter("\n");
-            sc.next(); // to eliminate head txt, otherwise NumberFormatException happen
+            sc.next();
             while (sc.hasNext()) {
                 line = sc.next();
                 String values[] = line.split(",");
@@ -143,8 +143,10 @@ public class Main {
         Map<String, List<Integer>> bowlersOverAndRun = new HashMap<String, List<Integer>>();
         Map<String, Float> bowlersEconomy = new TreeMap<>();
         String bowler = "";
-        int countOver, run;
-        int year, id;
+        int countOver;
+        int run;
+        int year;
+        int id;
         for (Match match : matches) {
             year = match.getSeason();
             if (year == targetYear) {
@@ -216,9 +218,11 @@ public class Main {
     protected static Map<String, Integer>
     printTheExtraRunsConcededPerTeamForParticularYear(List<Match> matches, List<Delivery> deliveries, int targetYear) {
         Map<Integer, String> listOfIdAndWinner = new HashMap<Integer, String>();
-        Map<String, Integer> trackExtraRun = new HashMap<String, Integer>();    //for question 3
+        Map<String, Integer> trackExtraRun = new HashMap<String, Integer>();
         String winner = "";
-        int countExtraRun = 0, extraRun = 0, matchId;
+        int countExtraRun = 0;
+        int extraRun = 0;
+        int matchId;
         for (Match match : matches) {
             if (match.getSeason() == targetYear) {
                 listOfIdAndWinner.put(match.getId(), match.getWinner());
@@ -245,13 +249,12 @@ public class Main {
 
     protected static Set<String> printTheWinnersWhoWinInACityLeastOneTime(List<Match> matches, String targetCity) {
         Set<String> winners = new HashSet<String>();
-        System.out.println("\n\n5.) Winners who win in the city: " + targetCity);
         for (Match match : matches) {
             if (match.getCity().equals(targetCity)) {
                 winners.add(match.getWinner());
             }
         }
-        System.out.print(winners);
+        System.out.print("\n\n5.) Winners who win in the city: " + targetCity+"\n"+winners);
         return winners;
     }
 }

@@ -5,8 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="90e7e5ae-0f51-4aca-b49a-a8ff01fb89b0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_protobuf_protobuf_java_3_11_4.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__mysql_mysql_connector_java_8_0_27.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/swarnava/ipl/MainTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/swarnava/ipl/MainTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IPL.iml" beforeDir="false" afterPath="$PROJECT_DIR$/IPL.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/swarnava/ipl/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/swarnava/ipl/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/swarnava/ipl/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/swarnava/ipl/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/test-classes/com/swarnava/ipl/MainTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/swarnava/ipl/MainTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -47,7 +52,7 @@
       <recent name="com.swarnava.ipl" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.MainTest">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.swarnava.ipl.Main" />
       <module name="IPL" />
@@ -78,8 +83,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.MainTest" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.MainTest" />
       </list>
     </recent_temporary>
   </component>
