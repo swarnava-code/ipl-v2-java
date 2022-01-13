@@ -6,36 +6,16 @@ import static com.swarnava.ipl.Main.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MainTest {
-    static Map<String, Float> actualTopEconomicalBowlersForParticularYear;
-    static Map<Integer, Integer> actualNumberOfMatchesPlayedPerYear;
-    static Map<String, Integer> actualNumberOfMatchesWonOfAllTeam;
-    static Map<String, Integer> actualExtraRunsConcededPerTeamForParticularYear;
-    static TreeSet<String> actualWinnersWhoWinInACityLeastOneTime;
-    static List<String> expectedWinnersWhoWinInACityLeastOneTime;
-
-    @BeforeAll
-    static void init() {
-        List<Match> matches = matchesData("dataset/matches.csv");
-        List<Delivery> deliveries = deliveriesData("dataset/deliveries.csv");
-        actualNumberOfMatchesPlayedPerYear = printNumberOfMatchesPlayedPerYear(matches);
-        actualNumberOfMatchesWonOfAllTeam = printNumberOfMatchesWonOfAllTeam(matches);
-        actualExtraRunsConcededPerTeamForParticularYear =
-                printTheExtraRunsConcededPerTeamForParticularYear(matches, deliveries, 2016);
-        actualTopEconomicalBowlersForParticularYear =
-                printTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
-        actualWinnersWhoWinInACityLeastOneTime =
-                new TreeSet<>(printTheWinnersWhoWinInACityLeastOneTime(matches, "Kolkata"));
-    }
-
     @DisplayName("Testing deliveries data")
     @Test
     void testDeliveriesData(){
+        List<Delivery> deliveries = deliveriesData("dataset/deliveries.csv");
         int expectedBall = 1;
-        int actualBall = deliveriesData("dataset/deliveries.csv").get(150454).getBall();
+        int actualBall = deliveries.get(150454).getBall();
         String expectedBatsMan = "Sachin Baby";
-        String actualBatsMan = deliveriesData("dataset/deliveries.csv").get(150455).getBatsMan();
+        String actualBatsMan = deliveries.get(150455).getBatsMan();
         int expectedSize = 150460;
-        int actualSize = deliveriesData("dataset/deliveries.csv").size();
+        int actualSize = deliveries.size();
         assertAll(
                 ()->assertEquals(expectedBatsMan, actualBatsMan,
                         "expectedBatsMan not matched"),
@@ -49,12 +29,13 @@ class MainTest {
     @DisplayName("Testing matches data")
     @Test
     void testMatchesData(){
+        List<Match> matches = matchesData("dataset/matches.csv");
         String expectedTeam = "Kolkata Knight Riders";
         String expectedTossDecision = "bat";
-        String actualTeam = matchesData("dataset/matches.csv").get(2).getTeam2();
-        String actualTossDecision = matchesData("dataset/matches.csv").get(4).getTossDecision();
+        String actualTeam = matches.get(2).getTeam2();
+        String actualTossDecision = matches.get(4).getTossDecision();
         int expectedSize = 636;
-        int actualSize = matchesData("dataset/matches.csv").size();
+        int actualSize = matches.size();
         assertAll(
                 ()->assertEquals(expectedTeam, actualTeam,
                         "expectedTeam not matched"),
@@ -67,7 +48,9 @@ class MainTest {
 
     @DisplayName("Testing number of matches played in the year 2016 and 2017")
     @Test
-    void testNumberOfMatchesPlayedInYear(){
+    void testNumberOfMatchesPlayedInYear() {
+        List<Match> matches = matchesData("dataset/matches.csv");
+        Map<Integer, Integer> actualNumberOfMatchesPlayedPerYear = printNumberOfMatchesPlayedPerYear(matches);
         int expectedNoOfMatches2017 = 59;
         int actualNoOfMatches2017 = actualNumberOfMatchesPlayedPerYear.get(2017);
         int expectedNoOfMatches2016 = 60;
@@ -83,6 +66,8 @@ class MainTest {
     @DisplayName("Testing number of matches won by GujaratLions, RoyalChallengersBangalore, KolkataKnightRiders")
     @Test
     void testNumberOfMatchesWonByTeam(){
+        List<Match> matches = matchesData("dataset/matches.csv");
+        Map<String, Integer>actualNumberOfMatchesWonOfAllTeam = printNumberOfMatchesWonOfAllTeam(matches);
         int expectedNumberOfMatchesWonByGujaratLions = 13;
         int actualNumberOfMatchesWonBGujaratLions = actualNumberOfMatchesWonOfAllTeam.get("Gujarat Lions");
         int expectedNumberOfMatchesWonByRoyalChallengersBangalore = 73;
@@ -107,6 +92,10 @@ class MainTest {
     @DisplayName("Testing extra runs conceded by KingsXIPunjab and KolkataKnightRiders for 2016")
     @Test
     void testTheExtraRunsConcededPerTeamFor2016(){
+        List<Match> matches = matchesData("dataset/matches.csv");
+        List<Delivery> deliveries = deliveriesData("dataset/deliveries.csv");
+        Map<String, Integer> actualExtraRunsConcededPerTeamForParticularYear =
+                printTheExtraRunsConcededPerTeamForParticularYear(matches, deliveries, 2016);
         int expectedExtraRunsConcededByKingsXIPunjab = 57;
         int actualExtraRunsConcededByKingsXIPunjab =
                 actualExtraRunsConcededPerTeamForParticularYear.get("Kings XI Punjab");
@@ -126,6 +115,10 @@ class MainTest {
     @DisplayName("Testing economical rate for the player V Kohli, J Yadav and RN ten Doeschate , year 2015")
     @Test
     void testEconomicalRate2015(){
+        List<Match> matches = matchesData("dataset/matches.csv");
+        List<Delivery> deliveries = deliveriesData("dataset/deliveries.csv");
+        Map<String, Float> actualTopEconomicalBowlersForParticularYear =
+                printTheTopEconomicalBowlersForParticularYear(matches, deliveries, 2015);
         double expectedEconomicalRateForVKohli =
                 Math.round(((double) 5.454545455537191)*100d)/100d;
         double actualEconomicalRateForVKohli =
@@ -151,6 +144,10 @@ class MainTest {
     @DisplayName("Testing winners who win in Kolkata at least one time")
     @Test
     void testTheWinnersWhoWinInKolkataLeastOneTime(){
+        List<Match> matches = matchesData("dataset/matches.csv");
+        TreeSet<String> actualWinnersWhoWinInACityLeastOneTime =
+                new TreeSet<>(printTheWinnersWhoWinInACityLeastOneTime(matches, "Kolkata"));;
+        List<String> expectedWinnersWhoWinInACityLeastOneTime;
         expectedWinnersWhoWinInACityLeastOneTime = Arrays.asList(
                 "Kolkata Knight Riders", "Gujarat Lions","Rising Pune Supergiant","Mumbai Indians",
                 "Chennai Super Kings", "Rajasthan Royals", "Kings XI Punjab","Kochi Tuskers Kerala",
