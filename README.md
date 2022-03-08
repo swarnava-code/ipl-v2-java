@@ -11,7 +11,10 @@
 1. $ service mysql status
 2. $ service mysql start
 3. $ service mysql stop
-4. $ mysql –u username –p
-5. mysql> SHOW DATABASES;
-6. mysql> use SCHEMA;
-7. mysql> select * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='tableName';
+4. $ mysql –u <username> –p ⏎
+     Enter passsword:<password>
+5. mysql> create database zs_db;
+6. mysql> SHOW DATABASES;
+7. mysql> USE <SCHEMA_NAME>
+8. mysql> SHOW TABLES;
+9. mysql> select * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='tableName';
